@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
+  ScrollView,
   Text,
   View,
   type LayoutChangeEvent,
@@ -57,21 +58,22 @@ export function MarqueeText({ text, style, pxPerSecond = 28, pauseMs = 1500 }: P
       onLayout={(e: LayoutChangeEvent) => setContainerWidth(e.nativeEvent.layout.width)}
       style={{ overflow: 'hidden' }}
     >
-      <Animated.View
-        style={{
-          flexDirection: 'row',
-          alignSelf: 'flex-start',
-          transform: [{ translateX: offset }],
-        }}
+      <ScrollView
+        horizontal
+        scrollEnabled={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 0 }}
       >
-        <Text
-          numberOfLines={1}
-          style={style}
-          onLayout={(e) => setTextWidth(e.nativeEvent.layout.width)}
-        >
-          {text}
-        </Text>
-      </Animated.View>
+        <Animated.View style={{ transform: [{ translateX: offset }] }}>
+          <Text
+            numberOfLines={1}
+            style={style}
+            onLayout={(e) => setTextWidth(e.nativeEvent.layout.width)}
+          >
+            {text}
+          </Text>
+        </Animated.View>
+      </ScrollView>
     </View>
   );
 }

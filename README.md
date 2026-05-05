@@ -7,9 +7,10 @@ React Native demo for the upcoming survey-taking app
 - Expo SDK 55, React Native 0.83, React 19.2, TypeScript strict
 - Expo Router 55 (file-based routing)
 - Zustand + immer + AsyncStorage persistence
-- React Native Paper (Material 3 on Android)
 - `expo-glass-effect` (iOS 26 Liquid Glass)
+- React Native Paper (Material 3 on Android)
 - Custom `NetworkImage` Expo Module: Kingfisher 8 (iOS, via SPM) and Coil 3 (Android)
+- React Native framework implementation: 
 - iOS deployment target 26.0, Android `compileSdk` / `targetSdk` 36, `minSdk` 26
 
 ## Architecture
