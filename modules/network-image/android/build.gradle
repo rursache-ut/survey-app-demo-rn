@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+group = 'expo.modules.networkimage'
+version = '1.0.0'
+
+def expoModulesCorePlugin = new File(project(":expo-modules-core").projectDir.absolutePath, "ExpoModulesCorePlugin.gradle")
+if (expoModulesCorePlugin.exists()) {
+  apply from: expoModulesCorePlugin
+  applyKotlinExpoModulesCorePlugin()
+  useCoreDependencies()
+  useExpoPublishing()
+}
+
+android {
+  namespace "expo.modules.networkimage"
+  defaultConfig {
+    minSdkVersion safeExtGet("minSdkVersion", 26)
+    compileSdkVersion safeExtGet("compileSdkVersion", 36)
+    targetSdkVersion safeExtGet("targetSdkVersion", 36)
+  }
+
+  buildFeatures {
+    compose false
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+
+  kotlinOptions {
+    jvmTarget = "17"
+    freeCompilerArgs += ["-Xskip-metadata-version-check"]
+  }
+}
+
+def safeExtGet(prop, fallback) {
+  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+dependencies {
+  implementation "io.coil-kt.coil3:coil:3.4.0"
+  implementation "io.coil-kt.coil3:coil-network-okhttp:3.4.0"
+}

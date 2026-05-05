@@ -1,0 +1,534 @@
+{
+  "surveys": [
+    {
+      "id": "srv_streamflix_2026",
+      "title": "Streamflix viewing habits",
+      "description": "Tell us how you discover and watch shows in 2026",
+      "payoutCents": 450,
+      "expiresAt": "2026-05-18T23:59:59Z",
+      "difficulty": "easy",
+      "estimatedMinutes": 4,
+      "sponsor": {
+        "name": "Streamflix",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=streamflix&backgroundColor=e11d48"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "free-text",
+          "prompt": "In one sentence, what made you pick the last show you watched?",
+          "placeholder": "I picked it because...",
+          "minLength": 10,
+          "maxLength": 240
+        },
+        {
+          "id": "q2",
+          "type": "slider",
+          "prompt": "How many hours per week do you stream?",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "hrs"
+        },
+        {
+          "id": "q3",
+          "type": "single-select",
+          "prompt": "Which device do you use most often?",
+          "options": [
+            { "id": "tv", "label": "Smart TV" },
+            { "id": "phone", "label": "Phone" },
+            { "id": "tablet", "label": "Tablet" },
+            { "id": "laptop", "label": "Laptop" },
+            { "id": "console", "label": "Game console" }
+          ]
+        },
+        {
+          "id": "q4",
+          "type": "multi-select",
+          "prompt": "Which genres did you watch in the last month?",
+          "minSelections": 1,
+          "maxSelections": 4,
+          "options": [
+            { "id": "drama", "label": "Drama" },
+            { "id": "comedy", "label": "Comedy" },
+            { "id": "scifi", "label": "Sci-Fi" },
+            { "id": "doc", "label": "Documentary" },
+            { "id": "thriller", "label": "Thriller" },
+            { "id": "anime", "label": "Anime" }
+          ]
+        },
+        {
+          "id": "q5",
+          "type": "top-x",
+          "prompt": "Rank the features that matter most when picking a show",
+          "topCount": 3,
+          "options": [
+            { "id": "cast", "label": "Cast" },
+            { "id": "rating", "label": "Critic rating" },
+            { "id": "trailer", "label": "Trailer" },
+            { "id": "friend", "label": "Friend recommendation" },
+            { "id": "synopsis", "label": "Synopsis" },
+            { "id": "thumbnail", "label": "Thumbnail" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "srv_brewco_coffee",
+      "title": "BrewCo morning routines",
+      "description": "Share how coffee fits into your weekday",
+      "payoutCents": 250,
+      "expiresAt": "2026-05-11T23:59:59Z",
+      "difficulty": "easy",
+      "estimatedMinutes": 3,
+      "sponsor": {
+        "name": "BrewCo",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=brewco&backgroundColor=92400e"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "single-select",
+          "prompt": "How many coffees do you drink on a typical weekday?",
+          "options": [
+            { "id": "0", "label": "None" },
+            { "id": "1", "label": "1" },
+            { "id": "2", "label": "2" },
+            { "id": "3", "label": "3" },
+            { "id": "4+", "label": "4 or more" }
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "slider",
+          "prompt": "What is the most you would pay for a specialty coffee?",
+          "min": 1,
+          "max": 15,
+          "step": 1,
+          "unit": "$"
+        },
+        {
+          "id": "q3",
+          "type": "free-text",
+          "prompt": "What is your go-to order?",
+          "placeholder": "Iced oat latte...",
+          "minLength": 3,
+          "maxLength": 120
+        }
+      ]
+    },
+    {
+      "id": "srv_greenmove_ev",
+      "title": "GreenMove EV considerations",
+      "description": "A short study on EV adoption barriers",
+      "payoutCents": 800,
+      "expiresAt": "2026-05-22T23:59:59Z",
+      "difficulty": "medium",
+      "estimatedMinutes": 7,
+      "sponsor": {
+        "name": "GreenMove",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=greenmove&backgroundColor=15803d"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "single-select",
+          "prompt": "Do you currently own an electric vehicle?",
+          "options": [
+            { "id": "yes", "label": "Yes" },
+            { "id": "no", "label": "No" },
+            { "id": "considering", "label": "Considering it" }
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "top-x",
+          "prompt": "Rank the biggest barriers to buying an EV",
+          "topCount": 4,
+          "options": [
+            { "id": "price", "label": "Upfront price" },
+            { "id": "range", "label": "Range anxiety" },
+            { "id": "charging", "label": "Charging infrastructure" },
+            { "id": "battery", "label": "Battery longevity" },
+            { "id": "resale", "label": "Resale value" },
+            { "id": "models", "label": "Limited model choice" },
+            { "id": "service", "label": "Service network" }
+          ]
+        },
+        {
+          "id": "q3",
+          "type": "slider",
+          "prompt": "Maximum price you would pay for an EV?",
+          "min": 15000,
+          "max": 100000,
+          "step": 1000,
+          "unit": "$"
+        },
+        {
+          "id": "q4",
+          "type": "multi-select",
+          "prompt": "Which incentives would actually move you to buy?",
+          "minSelections": 1,
+          "options": [
+            { "id": "tax", "label": "Tax credit" },
+            { "id": "free_charging", "label": "Free public charging" },
+            { "id": "home_charger", "label": "Free home charger install" },
+            { "id": "trade", "label": "Trade-in bonus" },
+            { "id": "lease", "label": "Subsidized lease" }
+          ]
+        },
+        {
+          "id": "q5",
+          "type": "free-text",
+          "prompt": "What would change your mind about EVs tomorrow?",
+          "minLength": 20,
+          "maxLength": 400
+        }
+      ]
+    },
+    {
+      "id": "srv_fitloop_wearables",
+      "title": "Fitloop wearable check-in",
+      "description": "How you use wearables for fitness",
+      "payoutCents": 350,
+      "expiresAt": "2026-05-09T23:59:59Z",
+      "difficulty": "easy",
+      "estimatedMinutes": 4,
+      "sponsor": {
+        "name": "Fitloop",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=fitloop&backgroundColor=2563eb"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "multi-select",
+          "prompt": "Which devices do you currently use?",
+          "minSelections": 0,
+          "options": [
+            { "id": "watch", "label": "Smartwatch" },
+            { "id": "ring", "label": "Smart ring" },
+            { "id": "band", "label": "Fitness band" },
+            { "id": "scale", "label": "Smart scale" },
+            { "id": "none", "label": "None" }
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "slider",
+          "prompt": "Workouts per week",
+          "min": 0,
+          "max": 14,
+          "step": 1,
+          "unit": "/wk"
+        },
+        {
+          "id": "q3",
+          "type": "single-select",
+          "prompt": "Most important metric to you?",
+          "options": [
+            { "id": "hr", "label": "Heart rate" },
+            { "id": "sleep", "label": "Sleep" },
+            { "id": "steps", "label": "Steps" },
+            { "id": "vo2", "label": "VO2 max" },
+            { "id": "calories", "label": "Calories" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "srv_gourmet_groceries",
+      "title": "Gourmet grocery quick poll",
+      "description": "Two questions on your grocery habits",
+      "payoutCents": 100,
+      "expiresAt": "2026-05-06T23:59:59Z",
+      "difficulty": "easy",
+      "estimatedMinutes": 1,
+      "sponsor": {
+        "name": "Gourmet",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=gourmet&backgroundColor=d97706"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "slider",
+          "prompt": "Weekly grocery spend",
+          "min": 20,
+          "max": 400,
+          "step": 10,
+          "unit": "$"
+        },
+        {
+          "id": "q2",
+          "type": "single-select",
+          "prompt": "Where do you shop most?",
+          "options": [
+            { "id": "supermarket", "label": "Supermarket" },
+            { "id": "online", "label": "Online delivery" },
+            { "id": "local", "label": "Local market" },
+            { "id": "warehouse", "label": "Warehouse club" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "srv_voltage_gaming",
+      "title": "Voltage gaming gear poll",
+      "description": "How you set up for competitive play",
+      "payoutCents": 525,
+      "expiresAt": "2026-05-26T23:59:59Z",
+      "difficulty": "medium",
+      "estimatedMinutes": 6,
+      "sponsor": {
+        "name": "Voltage",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=voltage&backgroundColor=7c3aed"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "single-select",
+          "prompt": "Primary platform you compete on?",
+          "options": [
+            { "id": "pc", "label": "PC" },
+            { "id": "console", "label": "Console" },
+            { "id": "mobile", "label": "Mobile" },
+            { "id": "handheld", "label": "Handheld" }
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "slider",
+          "prompt": "Hours per week spent gaming",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "unit": "hrs"
+        },
+        {
+          "id": "q3",
+          "type": "multi-select",
+          "prompt": "Which peripherals do you upgrade most?",
+          "minSelections": 1,
+          "maxSelections": 4,
+          "options": [
+            { "id": "mouse", "label": "Mouse" },
+            { "id": "keyboard", "label": "Keyboard" },
+            { "id": "headset", "label": "Headset" },
+            { "id": "monitor", "label": "Monitor" },
+            { "id": "chair", "label": "Chair" }
+          ]
+        },
+        {
+          "id": "q4",
+          "type": "free-text",
+          "prompt": "What is the one upgrade that changed your game?",
+          "placeholder": "Switching to a 240Hz monitor...",
+          "minLength": 15,
+          "maxLength": 280
+        }
+      ]
+    },
+    {
+      "id": "srv_clearfit_meal",
+      "title": "Clearfit meal-kit experience",
+      "description": "Help us tune the next box of recipes",
+      "payoutCents": 600,
+      "expiresAt": "2026-05-15T23:59:59Z",
+      "difficulty": "easy",
+      "estimatedMinutes": 5,
+      "sponsor": {
+        "name": "Clearfit",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=clearfit&backgroundColor=059669"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "single-select",
+          "prompt": "How often do you cook from a meal kit?",
+          "options": [
+            { "id": "never", "label": "Never" },
+            { "id": "monthly", "label": "Monthly" },
+            { "id": "weekly", "label": "Weekly" },
+            { "id": "daily", "label": "Daily" }
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "top-x",
+          "prompt": "Rank these dietary preferences in importance",
+          "topCount": 3,
+          "options": [
+            { "id": "low_carb", "label": "Low carb" },
+            { "id": "high_protein", "label": "High protein" },
+            { "id": "vegetarian", "label": "Vegetarian" },
+            { "id": "low_calorie", "label": "Low calorie" },
+            { "id": "gluten_free", "label": "Gluten free" },
+            { "id": "kid_friendly", "label": "Kid friendly" }
+          ]
+        },
+        {
+          "id": "q3",
+          "type": "slider",
+          "prompt": "Maximum acceptable price per serving",
+          "min": 4,
+          "max": 25,
+          "step": 1,
+          "unit": "$"
+        }
+      ]
+    },
+    {
+      "id": "srv_nimbus_remote",
+      "title": "Nimbus remote-work poll",
+      "description": "Tell us how your hybrid week looks",
+      "payoutCents": 300,
+      "expiresAt": "2026-05-13T23:59:59Z",
+      "difficulty": "easy",
+      "estimatedMinutes": 3,
+      "sponsor": {
+        "name": "Nimbus",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=nimbus&backgroundColor=0891b2"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "slider",
+          "prompt": "Days per week working from home",
+          "min": 0,
+          "max": 7,
+          "step": 1,
+          "unit": "/wk"
+        },
+        {
+          "id": "q2",
+          "type": "multi-select",
+          "prompt": "Which tools do you rely on most?",
+          "minSelections": 1,
+          "options": [
+            { "id": "video", "label": "Video calls" },
+            { "id": "chat", "label": "Async chat" },
+            { "id": "docs", "label": "Shared docs" },
+            { "id": "tasks", "label": "Task tracker" },
+            { "id": "whiteboard", "label": "Whiteboard" }
+          ]
+        },
+        {
+          "id": "q3",
+          "type": "single-select",
+          "prompt": "Best part of your remote setup?",
+          "options": [
+            { "id": "focus", "label": "Deep focus" },
+            { "id": "no_commute", "label": "No commute" },
+            { "id": "flexibility", "label": "Schedule flexibility" },
+            { "id": "comfort", "label": "Home comforts" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "srv_pulse_finance",
+      "title": "Pulse personal finance",
+      "description": "Quick check on how you save and invest",
+      "payoutCents": 700,
+      "expiresAt": "2026-05-30T23:59:59Z",
+      "difficulty": "medium",
+      "estimatedMinutes": 6,
+      "sponsor": {
+        "name": "Pulse",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=pulse&backgroundColor=be123c"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "single-select",
+          "prompt": "Which best describes your savings habit?",
+          "options": [
+            { "id": "automatic", "label": "Automated transfers" },
+            { "id": "manual", "label": "Manual when I can" },
+            { "id": "rare", "label": "Rarely save" },
+            { "id": "investing", "label": "Investing instead" }
+          ]
+        },
+        {
+          "id": "q2",
+          "type": "slider",
+          "prompt": "Percentage of income saved each month",
+          "min": 0,
+          "max": 60,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "id": "q3",
+          "type": "multi-select",
+          "prompt": "Where is your money parked?",
+          "minSelections": 1,
+          "options": [
+            { "id": "checking", "label": "Checking" },
+            { "id": "hysa", "label": "High-yield savings" },
+            { "id": "stocks", "label": "Stocks / ETFs" },
+            { "id": "crypto", "label": "Crypto" },
+            { "id": "real_estate", "label": "Real estate" },
+            { "id": "retirement", "label": "Retirement" }
+          ]
+        },
+        {
+          "id": "q4",
+          "type": "free-text",
+          "prompt": "What is the one money habit you wish you had?",
+          "placeholder": "Auto-investing...",
+          "minLength": 10,
+          "maxLength": 240
+        }
+      ]
+    },
+    {
+      "id": "srv_drift_travel",
+      "title": "Drift travel survey",
+      "description": "Help us plan offerings for the spring season",
+      "payoutCents": 425,
+      "expiresAt": "2026-05-20T23:59:59Z",
+      "difficulty": "easy",
+      "estimatedMinutes": 4,
+      "sponsor": {
+        "name": "Drift",
+        "logoUrl": "https://api.dicebear.com/9.x/shapes/png?seed=drift&backgroundColor=0ea5e9"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "type": "slider",
+          "prompt": "Trips taken in the last 12 months",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "unit": "trips"
+        },
+        {
+          "id": "q2",
+          "type": "single-select",
+          "prompt": "Preferred trip length",
+          "options": [
+            { "id": "weekend", "label": "Weekend" },
+            { "id": "week", "label": "1 week" },
+            { "id": "two_weeks", "label": "2 weeks" },
+            { "id": "month", "label": "A month or more" }
+          ]
+        },
+        {
+          "id": "q3",
+          "type": "top-x",
+          "prompt": "Rank what makes a trip memorable",
+          "topCount": 3,
+          "options": [
+            { "id": "food", "label": "Food" },
+            { "id": "culture", "label": "Culture" },
+            { "id": "nature", "label": "Nature" },
+            { "id": "people", "label": "People" },
+            { "id": "adventure", "label": "Adventure" },
+            { "id": "rest", "label": "Rest" }
+          ]
+        }
+      ]
+    }
+  ]
+}

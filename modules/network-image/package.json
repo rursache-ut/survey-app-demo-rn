@@ -1,0 +1,7 @@
+{
+  "name": "network-image",
+  "version": "1.0.0",
+  "description": "Local Expo module wrapping Kingfisher (iOS) and Coil (Android) for the Sayso demo",
+  "main": "index.ts",
+  "private": true
+}

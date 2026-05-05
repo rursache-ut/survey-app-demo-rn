@@ -1,50 +1,66 @@
-# Welcome to your Expo app 👋
+# Sayso
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+React Native demo for the upcoming survey-taking app
 
-## Get started
+## Stack
 
-1. Install dependencies
+- Expo SDK 55, React Native 0.83, React 19.2, TypeScript strict
+- Expo Router 55 (file-based routing)
+- Zustand + immer + AsyncStorage persistence
+- React Native Paper (Material 3 on Android)
+- `expo-glass-effect` (iOS 26 Liquid Glass)
+- Custom `NetworkImage` Expo Module: Kingfisher 8 (iOS, via SPM) and Coil 3 (Android)
+- iOS deployment target 26.0, Android `compileSdk` / `targetSdk` 36, `minSdk` 26
 
-   ```bash
-   npm install
-   ```
+## Architecture
 
-2. Start the app
+MVVM-C adapted for Expo Router.
 
-   ```bash
-   npx expo start
-   ```
+- View: route screen under `app/`
+- ViewModel: `useXxxViewModel` hook over a Zustand slice in `src/features/<feature>/store/`
+- Coordinator: `useXxxCoordinator` hook wrapping `useRouter()` in `src/features/<feature>/navigation/`
+- Repositories under `src/core/repositories/` read mock JSON from `src/core/data/`
 
-In the output, you'll find options to open the app in a
+Views never touch the router or store directly. May not be the best choice but i wanted to push this and see how it goes
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Logic
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Basic survey-taking app demo
+- Supports different survey step types: single-select, multi-select, free-text, slider, top-X ordering
+- Similar flow to internal app
 
-## Get a fresh project
+## The good
+- Shared codebase and resources between iOS and Android
+- Hot-reload during development
+- Supports UI elements that don't exist natively on iOS eg. dropdowns
+- Not locked down to Xcode
 
-When you're ready, run:
+## The bad
+- Cocoapods instead of SPM
+- Hard dependency on Expo SDK and its (slow) release cycle
+- Even if we target iOS 26+, we still can't properly support liquid glass and the new native iOS UI design system. We are constrained by only what `expo-glass-effect` exposes and outside the liquid glass tabbar, the List style, buttons, nav bar items, etc are still rendering in a iOS 18 style, making the app look old. This will also conflict with the decisions the design team are making because they will no longer match our new limitations/look and feel. More effort will be needed to recreate these native looks on both platforms and make stuff look good in both dark/light mode
+- Missing SwiftUI native modifiers for UI (eg `.toolbarTitleDisplayMode(.inlineLarge)`) even when 1:1 equivalents exists on Android side
+- Tapping into existing native code is possible but not always easy; dependencies are tricky to integrate and feels fragile
+- Navigation animations feel off on both platforms
+
+## Run
 
 ```bash
-npm run reset-project
+npm install
+npx expo prebuild --clean
+npm run ios       # or
+npm run android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Demo credentials: `radu_u@me.com` / `testpass`
 
-## Learn more
+## Layout
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+app/               file-based routes (auth, main, settings modal, runner)
+src/core/          models, repositories, mock JSON, storage helpers
+src/features/      auth, surveys, survey-runner, settings (store/viewmodels/navigation)
+src/ui/            components, theme, question renderers
+modules/           local Expo Modules (network-image)
+plugins/           config plugins (Kingfisher SPM injection)
+```

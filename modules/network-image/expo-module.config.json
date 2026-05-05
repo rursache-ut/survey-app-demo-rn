@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["NetworkImageModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.networkimage.NetworkImageModule"]
+  }
+}
