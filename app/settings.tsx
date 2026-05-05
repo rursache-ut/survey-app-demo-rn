@@ -10,17 +10,28 @@ import {
   Platform,
 } from 'react-native';
 import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { NetworkImage } from '@/ui/components/NetworkImage';
-import { useSettingsViewModel } from '@/features/settings/viewmodels/useSettingsViewModel';
-import { useSettingsCoordinator } from '@/features/settings/navigation/useSettingsCoordinator';
+import { useAuthStore } from '@/features/auth/store/authStore';
+import { usePrefsStore } from '@/features/prefs/store/prefsStore';
+import { formatCents } from '@/core/utils/currency';
 import { radii, spacing, typography, useTheme, type ThemeColors } from '@/ui/theme';
 
 export default function SettingsScreen() {
   const { colors } = useTheme();
-  const vm = useSettingsViewModel();
-  const coordinator = useSettingsCoordinator();
+  const router = useRouter();
+  const user = useAuthStore((s) => s.user);
+  const balanceCents = useAuthStore((s) => s.balanceCents);
+  const signOut = useAuthStore((s) => s.signOut);
+  const pushNotifications = usePrefsStore((s) => s.pushNotifications);
+  const setPushNotifications = usePrefsStore((s) => s.setPushNotifications);
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
+
+  const onSignOut = () => {
+    signOut();
+    router.replace('/(auth)/login');
+  };
 
   return (
     <ScrollView
@@ -30,17 +41,17 @@ export default function SettingsScreen() {
     >
       <Section header="Profile" colors={colors}>
         <View style={[styles.profileRow, { borderBottomColor: colors.separator }]}>
-          {vm.user ? (
-            <NetworkImage uri={vm.user.avatarUrl} cornerRadius={16} style={styles.avatar} />
+          {user ? (
+            <NetworkImage uri={user.avatarUrl} cornerRadius={16} style={styles.avatar} />
           ) : (
             <View style={[styles.avatar, { backgroundColor: colors.separator }]} />
           )}
           <View style={styles.profileText}>
             <Text style={[styles.profileName, { color: colors.text }]}>
-              {vm.user?.fullName ?? 'Guest'}
+              {user?.fullName ?? 'Guest'}
             </Text>
             <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>
-              {vm.user?.email ?? ''}
+              {user?.email ?? ''}
             </Text>
           </View>
         </View>
@@ -48,7 +59,7 @@ export default function SettingsScreen() {
           icon="wallet-outline"
           iconBg={colors.payout}
           label="Balance"
-          value={vm.balanceFormatted}
+          value={formatCents(balanceCents)}
           colors={colors}
           last
         />
@@ -59,8 +70,8 @@ export default function SettingsScreen() {
           icon="notifications-outline"
           iconBg={colors.danger}
           label="Push notifications"
-          value={vm.pushNotifications}
-          onChange={vm.setPushNotifications}
+          value={pushNotifications}
+          onChange={setPushNotifications}
           colors={colors}
           last
         />
@@ -97,7 +108,7 @@ export default function SettingsScreen() {
 
       <Section colors={colors}>
         <Pressable
-          onPress={coordinator.signOutAndExit}
+          onPress={onSignOut}
           style={({ pressed }) => [
             styles.row,
             { borderBottomColor: 'transparent' },

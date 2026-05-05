@@ -10,10 +10,10 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { useSurveyRunnerViewModel } from '@/features/survey-runner/viewmodels/useSurveyRunnerViewModel';
-import { useSurveyRunnerCoordinator } from '@/features/survey-runner/navigation/useSurveyRunnerCoordinator';
+import { useSurveyRunnerStore } from '@/features/survey-runner/store/surveyRunnerStore';
+import { quitSurvey } from '@/features/survey-runner/actions/runnerActions';
 import { QuestionRenderer, isAnswerValid } from '@/ui/components/QuestionRenderer';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
 import type { AnswerValue } from '@/core/models';
@@ -21,8 +21,10 @@ import { spacing, typography, useTheme } from '@/ui/theme';
 
 export default function QuestionScreen() {
   const { colors } = useTheme();
-  const vm = useSurveyRunnerViewModel();
-  const coordinator = useSurveyRunnerCoordinator();
+  const router = useRouter();
+  const survey = useSurveyRunnerStore((s) => s.survey);
+  const questionIndex = useSurveyRunnerStore((s) => s.questionIndex);
+  const submitAnswer = useSurveyRunnerStore((s) => s.submitAnswer);
   const [draft, setDraft] = useState<AnswerValue | undefined>(undefined);
 
   useFocusEffect(
@@ -32,16 +34,19 @@ export default function QuestionScreen() {
     }, [])
   );
 
-  if (!vm.survey || !vm.currentQuestion) {
-    return null;
-  }
+  if (!survey) return null;
+  const totalQuestions = survey.questions.length;
+  const currentQuestion = survey.questions[questionIndex] ?? null;
+  if (!currentQuestion) return null;
+  const progress = totalQuestions > 0 ? Math.min(questionIndex / totalQuestions, 1) : 0;
+  const isLast = questionIndex === totalQuestions - 1;
 
   const onNext = () => {
-    if (!draft || !vm.currentQuestion) return;
-    vm.submitAnswer(vm.currentQuestion.id, draft);
+    if (!draft) return;
+    submitAnswer(currentQuestion.id, draft);
     setDraft(undefined);
-    if (vm.questionIndex + 1 >= vm.totalQuestions) {
-      coordinator.goToReward(vm.survey!.id);
+    if (questionIndex + 1 >= totalQuestions) {
+      router.replace(`/runner/${survey.id}/reward`);
     }
   };
 
@@ -55,16 +60,15 @@ export default function QuestionScreen() {
           text: 'Quit and lose progress',
           style: 'destructive',
           onPress: () => {
-            vm.quit();
-            coordinator.exitToList();
+            quitSurvey();
+            router.replace('/(main)/surveys');
           },
         },
       ]
     );
   };
 
-  const valid = isAnswerValid(vm.currentQuestion, draft);
-  const isLast = vm.questionIndex === vm.totalQuestions - 1;
+  const valid = isAnswerValid(currentQuestion, draft);
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -74,11 +78,11 @@ export default function QuestionScreen() {
       >
         <View style={styles.headerBar}>
           <View style={[styles.progressTrack, { backgroundColor: colors.separator }]}>
-            <View style={[styles.progressFill, { width: `${vm.progress * 100}%`, backgroundColor: colors.accent }]} />
+            <View style={[styles.progressFill, { width: `${progress * 100}%`, backgroundColor: colors.accent }]} />
           </View>
           <View style={styles.headerRow}>
             <Text style={[styles.step, { color: colors.textSecondary }]}>
-              Question {vm.questionIndex + 1} of {vm.totalQuestions}
+              Question {questionIndex + 1} of {totalQuestions}
             </Text>
             <Pressable onPress={onQuit} hitSlop={8}>
               <Text style={[styles.quit, { color: colors.danger }]}>Quit</Text>
@@ -92,7 +96,7 @@ export default function QuestionScreen() {
           keyboardDismissMode="interactive"
         >
           <QuestionRenderer
-            question={vm.currentQuestion}
+            question={currentQuestion}
             value={draft}
             onChange={setDraft}
           />

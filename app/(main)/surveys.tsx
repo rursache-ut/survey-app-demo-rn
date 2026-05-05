@@ -1,26 +1,40 @@
 import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useLayoutEffect } from 'react';
-import { useSurveyListViewModel } from '@/features/surveys/viewmodels/useSurveyListViewModel';
-import { useSurveyListCoordinator } from '@/features/surveys/navigation/useSurveyListCoordinator';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
+import { useSurveyListStore } from '@/features/surveys/store/surveyListStore';
+import { useAuthStore } from '@/features/auth/store/authStore';
 import { SurveyListItem } from '@/ui/components/SurveyListItem';
 import { formatCents } from '@/core/utils/currency';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
-import { useAuthStore } from '@/features/auth/store/authStore';
 
 export default function SurveysScreen() {
   const { colors } = useTheme();
-  const vm = useSurveyListViewModel();
-  const coordinator = useSurveyListCoordinator();
+  const router = useRouter();
   const navigation = useNavigation();
+  const surveys = useSurveyListStore((s) => s.surveys);
+  const completedIds = useSurveyListStore((s) => s.completedIds);
+  const isLoading = useSurveyListStore((s) => s.isLoading);
+  const load = useSurveyListStore((s) => s.load);
   const balanceCents = useAuthStore((s) => s.balanceCents);
+
+  const visible = useMemo(
+    () =>
+      surveys
+        .filter((s) => !completedIds.includes(s.id))
+        .sort((a, b) => new Date(a.expiresAt).getTime() - new Date(b.expiresAt).getTime()),
+    [surveys, completedIds]
+  );
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
         <Pressable
-          onPress={coordinator.openSettings}
+          onPress={() => router.push('/settings')}
           hitSlop={12}
           style={{ paddingHorizontal: 4 }}
         >
@@ -41,19 +55,19 @@ export default function SurveysScreen() {
         },
       ],
     });
-  }, [navigation, coordinator, balanceCents, colors]);
+  }, [navigation, router, balanceCents, colors]);
 
   return (
     <FlatList
       style={{ backgroundColor: colors.background }}
       contentInsetAdjustmentBehavior="automatic"
-      data={vm.surveys}
+      data={visible}
       keyExtractor={(s) => s.id}
       renderItem={({ item }) => (
-        <SurveyListItem survey={item} onPress={() => coordinator.startSurvey(item.id)} />
+        <SurveyListItem survey={item} onPress={() => router.push(`/runner/${item.id}/intro`)} />
       )}
       ListEmptyComponent={
-        vm.isLoading ? (
+        isLoading ? (
           <View style={styles.empty}>
             <ActivityIndicator />
           </View>
@@ -64,9 +78,9 @@ export default function SurveysScreen() {
           </View>
         )
       }
-      refreshing={vm.isLoading}
-      onRefresh={vm.refresh}
-      contentContainerStyle={vm.surveys.length === 0 ? { flexGrow: 1 } : { paddingVertical: spacing.sm }}
+      refreshing={isLoading}
+      onRefresh={load}
+      contentContainerStyle={visible.length === 0 ? { flexGrow: 1 } : { paddingVertical: spacing.sm }}
     />
   );
 }

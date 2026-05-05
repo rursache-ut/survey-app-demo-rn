@@ -9,30 +9,37 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { useAuthViewModel } from '@/features/auth/viewmodels/useAuthViewModel';
-import { useAuthCoordinator } from '@/features/auth/navigation/useAuthCoordinator';
 import { useAuthStore } from '@/features/auth/store/authStore';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
+import { isLikelyEmail } from '@/core/utils/email';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 
 const TAP_WINDOW_MS = 800;
 
 export default function LoginScreen() {
   const { colors } = useTheme();
-  const vm = useAuthViewModel();
-  const coordinator = useAuthCoordinator();
+  const router = useRouter();
   const user = useAuthStore((s) => s.user);
+  const isSigningIn = useAuthStore((s) => s.isSigningIn);
+  const signInError = useAuthStore((s) => s.signInError);
+  const signIn = useAuthStore((s) => s.signIn);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const tapsRef = useRef<number[]>([]);
 
+  const canSubmit = isLikelyEmail(email) && password.length > 0 && !isSigningIn;
+
   useEffect(() => {
-    if (user) coordinator.onSignedIn();
-  }, [user, coordinator]);
+    if (user) router.replace('/(main)/surveys');
+  }, [user, router]);
 
   const onSubmit = async () => {
-    const ok = await vm.submit();
-    if (ok) coordinator.onSignedIn();
+    const ok = await signIn(email, password);
+    if (ok) router.replace('/(main)/surveys');
   };
 
   const onHeroTap = () => {
@@ -40,8 +47,8 @@ export default function LoginScreen() {
     tapsRef.current = [...tapsRef.current.filter((t) => now - t < TAP_WINDOW_MS), now];
     if (tapsRef.current.length >= 3) {
       tapsRef.current = [];
-      vm.setEmail('test@user.com');
-      vm.setPassword('testpass');
+      setEmail('test@user.com');
+      setPassword('testpass');
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
     }
   };
@@ -68,36 +75,36 @@ export default function LoginScreen() {
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
-            value={vm.email}
-            onChangeText={vm.setEmail}
+            value={email}
+            onChangeText={setEmail}
           />
           <TextInput
             style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
             placeholder="Password"
             placeholderTextColor={colors.textTertiary}
             secureTextEntry
-            value={vm.password}
-            onChangeText={vm.setPassword}
+            value={password}
+            onChangeText={setPassword}
           />
-          {vm.signInError ? (
-            <Text style={[styles.error, { color: colors.danger }]}>{vm.signInError}</Text>
+          {signInError ? (
+            <Text style={[styles.error, { color: colors.danger }]}>{signInError}</Text>
           ) : null}
 
           <View style={{ marginTop: spacing.sm }}>
             <GlassPrimaryButton
               title="Sign in"
               onPress={onSubmit}
-              disabled={!vm.canSubmit}
-              loading={vm.isSigningIn}
+              disabled={!canSubmit}
+              loading={isSigningIn}
               variant="filled"
             />
           </View>
 
           <View style={styles.linksRow}>
-            <Pressable onPress={coordinator.goToForgotPassword}>
+            <Pressable onPress={() => router.push('/(auth)/forgot-password')}>
               <Text style={[styles.link, { color: colors.accent }]}>Forgot password</Text>
             </Pressable>
-            <Pressable onPress={coordinator.goToCreateAccount}>
+            <Pressable onPress={() => router.push('/(auth)/create-account')}>
               <Text style={[styles.link, { color: colors.accent }]}>Create account</Text>
             </Pressable>
           </View>

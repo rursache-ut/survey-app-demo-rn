@@ -1,22 +1,19 @@
 import { useEffect, useState } from 'react';
 import type { Survey } from '@/core/models';
 import { surveyRepository } from '@/core/repositories';
-import { useSurveyRunnerStore } from '@/features/survey-runner/store/surveyRunnerStore';
 
-type IntroState = {
+type PreviewState = {
   survey: Survey | null;
   isLoading: boolean;
   error: string | null;
 };
 
-export function useSurveyIntroViewModel(id: string | undefined) {
-  const [state, setState] = useState<IntroState>({
+export function useSurveyPreview(id: string | undefined): PreviewState {
+  const [state, setState] = useState<PreviewState>({
     survey: null,
     isLoading: true,
     error: null,
   });
-  const start = useSurveyRunnerStore((s) => s.start);
-  const isStarting = useSurveyRunnerStore((s) => s.isLoading);
 
   useEffect(() => {
     if (!id) {
@@ -40,14 +37,5 @@ export function useSurveyIntroViewModel(id: string | undefined) {
     };
   }, [id]);
 
-  return {
-    survey: state.survey,
-    isLoading: state.isLoading,
-    error: state.error,
-    isStarting,
-    begin: async () => {
-      if (!id) return false;
-      return start(id);
-    },
-  };
+  return state;
 }

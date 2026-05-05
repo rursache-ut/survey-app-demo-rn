@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { useSurveyRunnerViewModel, type RewardSnapshot } from '@/features/survey-runner/viewmodels/useSurveyRunnerViewModel';
-import { useSurveyRunnerCoordinator } from '@/features/survey-runner/navigation/useSurveyRunnerCoordinator';
+import { useSurveyRunnerStore } from '@/features/survey-runner/store/surveyRunnerStore';
+import { claimSurveyReward, type RewardSnapshot } from '@/features/survey-runner/actions/runnerActions';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
 import { formatCents } from '@/core/utils/currency';
 import { spacing, typography, useTheme } from '@/ui/theme';
@@ -13,8 +14,8 @@ const { width } = Dimensions.get('window');
 
 export default function RewardScreen() {
   const { colors } = useTheme();
-  const { survey, claimReward } = useSurveyRunnerViewModel();
-  const coordinator = useSurveyRunnerCoordinator();
+  const router = useRouter();
+  const survey = useSurveyRunnerStore((s) => s.survey);
   const claimedRef = useRef(false);
   const [snapshot, setSnapshot] = useState<RewardSnapshot | null>(() =>
     survey ? { title: survey.title, payoutCents: survey.payoutCents } : null
@@ -23,10 +24,10 @@ export default function RewardScreen() {
   useEffect(() => {
     if (claimedRef.current) return;
     claimedRef.current = true;
-    const claimed = claimReward();
+    const claimed = claimSurveyReward();
     if (claimed) setSnapshot(claimed);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-  }, [claimReward]);
+  }, []);
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -44,7 +45,7 @@ export default function RewardScreen() {
       </View>
 
       <View style={styles.footer}>
-        <GlassPrimaryButton title="Back to surveys" onPress={coordinator.exitToList} />
+        <GlassPrimaryButton title="Back to surveys" onPress={() => router.replace('/(main)/surveys')} />
       </View>
 
       <ConfettiCannon

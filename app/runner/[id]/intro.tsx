@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams } from 'expo-router';
-import { useSurveyIntroViewModel } from '@/features/survey-runner/viewmodels/useSurveyIntroViewModel';
-import { useSurveyRunnerCoordinator } from '@/features/survey-runner/navigation/useSurveyRunnerCoordinator';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useSurveyPreview } from '@/features/survey-runner/hooks/useSurveyPreview';
+import { useSurveyRunnerStore } from '@/features/survey-runner/store/surveyRunnerStore';
 import { NetworkImage } from '@/ui/components/NetworkImage';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
 import { formatCents } from '@/core/utils/currency';
@@ -10,11 +10,13 @@ import { radii, spacing, typography, useTheme, type ThemeColors } from '@/ui/the
 
 export default function IntroScreen() {
   const { colors } = useTheme();
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const vm = useSurveyIntroViewModel(id);
-  const coordinator = useSurveyRunnerCoordinator();
+  const { survey, isLoading, error } = useSurveyPreview(id);
+  const start = useSurveyRunnerStore((s) => s.start);
+  const isStarting = useSurveyRunnerStore((s) => s.isLoading);
 
-  if (vm.isLoading) {
+  if (isLoading) {
     return (
       <View style={[styles.loading, { backgroundColor: colors.background }]}>
         <ActivityIndicator />
@@ -22,27 +24,25 @@ export default function IntroScreen() {
     );
   }
 
-  if (vm.error || !vm.survey) {
+  if (error || !survey) {
     return (
-      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['bottom']}>
+      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={styles.errorContainer}>
           <Text style={[styles.errorTitle, { color: colors.text }]}>Survey unavailable</Text>
           <Text style={[styles.errorBody, { color: colors.textSecondary }]}>
-            {vm.error ?? 'This survey could not be loaded.'}
+            {error ?? 'This survey could not be loaded.'}
           </Text>
         </View>
         <View style={styles.footer}>
-          <GlassPrimaryButton title="Back to surveys" onPress={coordinator.exitToList} />
+          <GlassPrimaryButton title="Back to surveys" onPress={() => router.replace('/(main)/surveys')} />
         </View>
       </SafeAreaView>
     );
   }
 
-  const survey = vm.survey;
-
   const onStart = async () => {
-    const ok = await vm.begin();
-    if (ok) coordinator.enterSurvey(survey.id);
+    const ok = await start(survey.id);
+    if (ok) router.replace(`/runner/${survey.id}/question`);
   };
 
   return (
@@ -73,9 +73,9 @@ export default function IntroScreen() {
       </View>
 
       <View style={styles.footer}>
-        <GlassPrimaryButton title="Start survey" onPress={onStart} loading={vm.isStarting} />
+        <GlassPrimaryButton title="Start survey" onPress={onStart} loading={isStarting} />
         <Pressable
-          onPress={coordinator.exitToList}
+          onPress={() => router.replace('/(main)/surveys')}
           hitSlop={8}
           style={({ pressed }) => [styles.cancelBtn, pressed && { opacity: 0.5 }]}
         >

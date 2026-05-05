@@ -10,20 +10,17 @@ React Native demo for the upcoming survey-taking app
 - `expo-glass-effect` (iOS 26 Liquid Glass)
 - React Native Paper (Material 3 on Android)
 - Custom `NetworkImage` Expo Module: Kingfisher 8 (iOS, via SPM) and Coil 3 (Android)
-- React Native framework implementation: 
 - iOS deployment target 26.0, Android `compileSdk` / `targetSdk` 36, `minSdk` 26
 
 ## Architecture
 
-MVVM-C adapted for Expo Router.
+Lightweight, feature-first. Three things to remember:
 
-- **View** — route screen under `app/`. Renders state from a viewmodel and forwards user input to it. Never touches stores, the router, or repositories directly
-- **ViewModel** — `useXxxViewModel` hook in `src/features/<feature>/viewmodels/`. Subscribes to one or more Zustand stores, derives display state, and exposes the actions the view can call. Workflow actions that span features (eg. claim reward = award balance + mark survey completed + clear runner state) live here so the screen stays declarative
-- **Coordinator** — `useXxxCoordinator` hook in `src/features/<feature>/navigation/`. Wraps `useRouter()` and any one-shot side effects tied to navigation (eg. sign-out-and-exit). The view calls `coordinator.someAction()` instead of `router.push(...)`
-- **Store** — Zustand slice in `src/features/<feature>/store/`. Holds feature-local state and the actions that mutate it. Async actions handle their own errors and expose an `error: string \| null` field for the view
-- **Repository** — interface in `src/core/repositories/` with a mock implementation backed by JSON in `src/core/data/`. Throws domain-specific errors (eg. `SurveyNotFoundError`) instead of returning nullable results, so callers do not have to remember to null-check
+- **Screens** (`app/`) read stores directly with selectors and call `router.push()` inline. No viewmodel or coordinator wrapper layers
+- **Stores** (`src/features/<name>/store/`) — one Zustand slice per domain. Async actions catch their own errors and expose an `error: string \| null` field
+- **Cross-feature workflows** live as plain async functions in `src/features/<name>/actions/` (eg. `claimSurveyReward` awards balance + marks survey completed + clears runner state). They reach into peer stores via `useStore.getState()`, so they stay outside React and are trivial to test
 
-Cross-feature side effects flow through viewmodels via `store.getState()` so the action callbacks stay referentially stable and screens can use them in `useEffect` without re-firing
+Repositories in `src/core/repositories/` throw domain errors (eg. `SurveyNotFoundError`) instead of returning nullable results. Small reusable hooks (eg. `useSurveyPreview`) live next to the feature they serve under `src/features/<name>/hooks/` only when they own real logic — passthrough hooks are deliberately avoided
 
 ## Logic
 
@@ -64,15 +61,4 @@ npm run ios       # or
 npm run android
 ```
 
-Demo credentials: `test@user.com` / `testpass`
-
-## Layout
-
-```
-app/               file-based routes (auth, main, settings modal, runner)
-src/core/          models, repositories, mock JSON, storage helpers, utils
-src/features/      auth, surveys, survey-runner, settings (store/viewmodels/navigation)
-src/ui/            components, theme, question renderers
-modules/           local Expo Modules (network-image)
-plugins/           config plugins (Kingfisher SPM injection)
-```
+Demo credentials: `test@user.com` / `testpass` or triple-tap the hero icon in the auth screen
