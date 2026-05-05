@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   errorContainer: { flex: 1, padding: spacing.xl, alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
   errorTitle: { ...typography.title2 },
   errorBody: { ...typography.body, textAlign: 'center' },
-  header: { alignItems: 'center', gap: spacing.sm, marginTop: spacing.xxl * 2 },
+  header: { alignItems: 'center', gap: spacing.sm, marginTop: spacing.lg },
   logo: { width: 80, height: 80 },
   sponsor: { ...typography.caption1, letterSpacing: 0.4 },
   title: { ...typography.title1, textAlign: 'center' },
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   warningTitle: { ...typography.headline },
   warningText: { ...typography.subhead },
-  footer: { paddingHorizontal: spacing.xl, paddingTop: spacing.md, paddingBottom: 0, gap: spacing.xs },
-  cancelBtn: { alignItems: 'center', paddingVertical: spacing.xs },
+  footer: { paddingHorizontal: spacing.xl, paddingTop: spacing.md, paddingBottom: 0, gap: spacing.md },
+  cancelBtn: { alignItems: 'center', paddingVertical: spacing.md },
   cancelText: { ...typography.headline },
 });
