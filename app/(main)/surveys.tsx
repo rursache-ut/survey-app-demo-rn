@@ -56,8 +56,13 @@ export default function SurveysScreen() {
       });
     } else {
       navigation.setOptions({
-        headerLeft: () => <View style={{ paddingLeft: spacing.md }}>{balancePill}</View>,
-        headerRight: () => <View style={{ paddingRight: spacing.sm }}>{settingsButton}</View>,
+        headerLeft: undefined,
+        headerRight: () => (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingRight: spacing.sm }}>
+            {balancePill}
+            {settingsButton}
+          </View>
+        ),
       });
     }
   }, [navigation, router, balanceCents, colors]);
