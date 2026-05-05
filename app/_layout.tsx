@@ -2,9 +2,12 @@ import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, useColorScheme } from 'react-native';
+import { LogBox, Platform, useColorScheme } from 'react-native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { ThemeProvider, DarkTheme, DefaultTheme } from '@react-navigation/native';
+
+// Hide the in-app warning toast in dev. Logs still print to Metro.
+if (__DEV__) LogBox.ignoreAllLogs();
 
 export default function RootLayout() {
   const scheme = useColorScheme();
