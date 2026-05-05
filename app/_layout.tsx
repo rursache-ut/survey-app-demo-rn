@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { ThemeProvider, DarkTheme, DefaultTheme } from '@react-navigation/native';
 
@@ -30,13 +30,19 @@ export default function RootLayout() {
               <Stack.Screen
                 name="settings"
                 options={{
-                  presentation: 'formSheet',
                   title: 'Settings',
-                  headerLargeTitle: false,
-                  headerTransparent: true,
                   headerBackButtonDisplayMode: 'minimal',
-                  sheetGrabberVisible: true,
-                  sheetAllowedDetents: [1.0],
+                  // formSheet + sheet* options are iOS-only; on Android they
+                  // throw at the native screens layer, so use a plain modal
+                  ...(Platform.OS === 'ios'
+                    ? {
+                        presentation: 'formSheet' as const,
+                        headerLargeTitle: false,
+                        headerTransparent: true,
+                        sheetGrabberVisible: true,
+                        sheetAllowedDetents: [1.0],
+                      }
+                    : { presentation: 'modal' as const }),
                 }}
               />
               <Stack.Screen

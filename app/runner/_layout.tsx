@@ -5,7 +5,7 @@ export default function RunnerLayout() {
     <Stack screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen
         name="[id]/intro"
-        options={{ title: '', headerTransparent: true, gestureEnabled: true }}
+        options={{ headerShown: false, gestureEnabled: true }}
       />
       <Stack.Screen
         name="[id]/question"

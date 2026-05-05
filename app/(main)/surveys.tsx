@@ -1,4 +1,4 @@
-import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import { FlatList, View, Text, ActivityIndicator, Platform, Pressable, StyleSheet } from 'react-native';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useLayoutEffect, useMemo } from 'react';
@@ -31,30 +31,35 @@ export default function SurveysScreen() {
   }, [load]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <Pressable
-          onPress={() => router.push('/settings')}
-          hitSlop={12}
-          style={{ paddingHorizontal: 4 }}
-        >
-          <Ionicons name="settings-outline" size={26} color={colors.accent} />
-        </Pressable>
-      ),
-      unstable_headerRightItems: () => [
-        {
-          type: 'custom',
-          hidesSharedBackground: true,
-          element: (
-            <View style={[styles.balancePill, { backgroundColor: colors.payout }]}>
-              <Text style={[styles.balanceText, { color: '#fff' }]}>
-                {formatCents(balanceCents)}
-              </Text>
-            </View>
-          ),
-        },
-      ],
-    });
+    const settingsButton = (
+      <Pressable
+        onPress={() => router.push('/settings')}
+        hitSlop={12}
+        style={{ paddingHorizontal: 4 }}
+      >
+        <Ionicons name="settings-outline" size={26} color={colors.accent} />
+      </Pressable>
+    );
+    const balancePill = (
+      <View style={[styles.balancePill, { backgroundColor: colors.payout }]}>
+        <Text style={[styles.balanceText, { color: '#fff' }]}>{formatCents(balanceCents)}</Text>
+      </View>
+    );
+
+    if (Platform.OS === 'ios') {
+      // unstable_headerRightItems gives us the iOS 26 Liquid Glass treatment
+      navigation.setOptions({
+        headerLeft: () => settingsButton,
+        unstable_headerRightItems: () => [
+          { type: 'custom', hidesSharedBackground: true, element: balancePill },
+        ],
+      });
+    } else {
+      navigation.setOptions({
+        headerLeft: () => <View style={{ paddingLeft: spacing.md }}>{balancePill}</View>,
+        headerRight: () => <View style={{ paddingRight: spacing.sm }}>{settingsButton}</View>,
+      });
+    }
   }, [navigation, router, balanceCents, colors]);
 
   return (
