@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { SliderQuestion as Q, AnswerValue } from '@/core/models';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 
@@ -13,12 +13,15 @@ type Props = {
 export function SliderQuestion({ question, value, onChange }: Props) {
   const { colors } = useTheme();
   const current = value?.type === 'slider' ? value.value : Math.round((question.min + question.max) / 2);
+  const seededRef = useRef(false);
 
   useEffect(() => {
+    if (seededRef.current) return;
+    seededRef.current = true;
     if (value?.type !== 'slider') {
       onChange({ type: 'slider', value: current });
     }
-  }, []);
+  }, [value, current, onChange]);
   return (
     <View style={styles.container}>
       <Text style={[styles.prompt, { color: colors.text }]}>{question.prompt}</Text>

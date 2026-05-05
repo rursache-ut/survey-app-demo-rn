@@ -1,27 +1,20 @@
 import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import type { Survey } from '@/core/models';
-import { surveyRepository } from '@/core/repositories';
-import { useSurveyRunnerStore } from '@/features/survey-runner/store/surveyRunnerStore';
+import { useSurveyIntroViewModel } from '@/features/survey-runner/viewmodels/useSurveyIntroViewModel';
 import { useSurveyRunnerCoordinator } from '@/features/survey-runner/navigation/useSurveyRunnerCoordinator';
 import { NetworkImage } from '@/ui/components/NetworkImage';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
-import { radii, spacing, typography, useTheme } from '@/ui/theme';
+import { formatCents } from '@/core/utils/currency';
+import { radii, spacing, typography, useTheme, type ThemeColors } from '@/ui/theme';
 
 export default function IntroScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [survey, setSurvey] = useState<Survey | null>(null);
-  const start = useSurveyRunnerStore((s) => s.start);
+  const vm = useSurveyIntroViewModel(id);
   const coordinator = useSurveyRunnerCoordinator();
 
-  useEffect(() => {
-    surveyRepository.getSurvey(id).then(setSurvey);
-  }, [id]);
-
-  if (!survey) {
+  if (vm.isLoading) {
     return (
       <View style={[styles.loading, { backgroundColor: colors.background }]}>
         <ActivityIndicator />
@@ -29,13 +22,31 @@ export default function IntroScreen() {
     );
   }
 
+  if (vm.error || !vm.survey) {
+    return (
+      <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['bottom']}>
+        <View style={styles.errorContainer}>
+          <Text style={[styles.errorTitle, { color: colors.text }]}>Survey unavailable</Text>
+          <Text style={[styles.errorBody, { color: colors.textSecondary }]}>
+            {vm.error ?? 'This survey could not be loaded.'}
+          </Text>
+        </View>
+        <View style={styles.footer}>
+          <GlassPrimaryButton title="Back to surveys" onPress={coordinator.exitToList} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const survey = vm.survey;
+
   const onStart = async () => {
-    await start(survey.id);
-    coordinator.enterSurvey(survey.id);
+    const ok = await vm.begin();
+    if (ok) coordinator.enterSurvey(survey.id);
   };
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['bottom']}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={styles.container}>
         <View style={styles.header}>
           <NetworkImage uri={survey.sponsor.logoUrl} cornerRadius={20} style={styles.logo} />
@@ -47,9 +58,9 @@ export default function IntroScreen() {
         </View>
 
         <View style={[styles.metaCard, { backgroundColor: colors.card }]}>
-          <Meta label="Reward" value={`$${(survey.payoutCents / 100).toFixed(2)}`} primary={colors.text} secondary={colors.textSecondary} />
-          <Meta label="Questions" value={String(survey.questions.length)} primary={colors.text} secondary={colors.textSecondary} />
-          <Meta label="Duration" value={`~${survey.estimatedMinutes}m`} primary={colors.text} secondary={colors.textSecondary} />
+          <Meta label="Reward" value={formatCents(survey.payoutCents)} colors={colors} />
+          <Meta label="Questions" value={String(survey.questions.length)} colors={colors} />
+          <Meta label="Duration" value={`~${survey.estimatedMinutes}m`} colors={colors} />
         </View>
 
         <View style={[styles.warningBox, { backgroundColor: colors.warningBg }]}>
@@ -62,7 +73,7 @@ export default function IntroScreen() {
       </View>
 
       <View style={styles.footer}>
-        <GlassPrimaryButton title="Start survey" onPress={onStart} />
+        <GlassPrimaryButton title="Start survey" onPress={onStart} loading={vm.isStarting} />
         <Pressable
           onPress={coordinator.exitToList}
           hitSlop={8}
@@ -75,21 +86,11 @@ export default function IntroScreen() {
   );
 }
 
-function Meta({
-  label,
-  value,
-  primary,
-  secondary,
-}: {
-  label: string;
-  value: string;
-  primary: string;
-  secondary: string;
-}) {
+function Meta({ label, value, colors }: { label: string; value: string; colors: ThemeColors }) {
   return (
     <View style={styles.meta}>
-      <Text style={[styles.metaLabel, { color: secondary }]}>{label.toUpperCase()}</Text>
-      <Text style={[styles.metaValue, { color: primary }]}>{value}</Text>
+      <Text style={[styles.metaLabel, { color: colors.textSecondary }]}>{label.toUpperCase()}</Text>
+      <Text style={[styles.metaValue, { color: colors.text }]}>{value}</Text>
     </View>
   );
 }
@@ -98,7 +99,10 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   loading: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   container: { flex: 1, padding: spacing.xl, gap: spacing.lg },
-  header: { alignItems: 'center', gap: spacing.sm, marginTop: spacing.xxl },
+  errorContainer: { flex: 1, padding: spacing.xl, alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
+  errorTitle: { ...typography.title2 },
+  errorBody: { ...typography.body, textAlign: 'center' },
+  header: { alignItems: 'center', gap: spacing.sm, marginTop: spacing.xxl * 2 },
   logo: { width: 80, height: 80 },
   sponsor: { ...typography.caption1, letterSpacing: 0.4 },
   title: { ...typography.title1, textAlign: 'center' },
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
   },
   warningTitle: { ...typography.headline },
   warningText: { ...typography.subhead },
-  footer: { padding: spacing.xl, gap: spacing.md },
-  cancelBtn: { alignItems: 'center', paddingVertical: spacing.sm },
+  footer: { paddingHorizontal: spacing.xl, paddingTop: spacing.md, paddingBottom: 0, gap: spacing.xs },
+  cancelBtn: { alignItems: 'center', paddingVertical: spacing.xs },
   cancelText: { ...typography.headline },
 });

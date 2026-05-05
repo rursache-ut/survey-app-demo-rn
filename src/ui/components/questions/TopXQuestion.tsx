@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
@@ -19,7 +19,7 @@ type Item = { id: string; label: string };
 export function TopXQuestion({ question, value, onChange }: Props) {
   const { colors } = useTheme();
 
-  const initialOrder = useMemo(() => {
+  const currentOrder = useMemo(() => {
     const stored = value?.type === 'top-x' ? value.orderedOptionIds : null;
     if (stored && stored.length === question.options.length) {
       const map = new Map(question.options.map((o) => [o.id, o]));
@@ -28,18 +28,21 @@ export function TopXQuestion({ question, value, onChange }: Props) {
     return question.options;
   }, [question.options, value]);
 
+  const seededRef = useRef(false);
   useEffect(() => {
+    if (seededRef.current) return;
+    seededRef.current = true;
     if (value?.type !== 'top-x') {
-      onChange({ type: 'top-x', orderedOptionIds: initialOrder.map((o) => o.id) });
+      onChange({ type: 'top-x', orderedOptionIds: currentOrder.map((o) => o.id) });
     }
-  }, []);
+  }, [value, currentOrder, onChange]);
 
   const setOrder = (items: Item[]) => {
     onChange({ type: 'top-x', orderedOptionIds: items.map((o) => o.id) });
   };
 
   const move = (index: number, direction: -1 | 1) => {
-    const items = [...initialOrder];
+    const items = [...currentOrder];
     const target = index + direction;
     if (target < 0 || target >= items.length) return;
     [items[index], items[target]] = [items[target]!, items[index]!];
@@ -74,13 +77,13 @@ export function TopXQuestion({ question, value, onChange }: Props) {
             <Pressable
               onPress={() => move(index, 1)}
               hitSlop={8}
-              disabled={index === initialOrder.length - 1}
+              disabled={index === currentOrder.length - 1}
             >
               <Ionicons
                 name="chevron-down"
                 size={22}
                 color={
-                  index === initialOrder.length - 1 ? colors.textTertiary : colors.accent
+                  index === currentOrder.length - 1 ? colors.textTertiary : colors.accent
                 }
               />
             </Pressable>
@@ -100,7 +103,7 @@ export function TopXQuestion({ question, value, onChange }: Props) {
         Top {question.topCount} are highlighted. Drag the handle or use the arrows to reorder.
       </Text>
       <DraggableFlatList
-        data={initialOrder}
+        data={currentOrder}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         onDragEnd={({ data }) => setOrder(data)}

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createJSONStorage } from '@/core/storage/zustandStorage';
 import { useAuthStore } from '@/features/auth/store/authStore';
+import { formatCents } from '@/core/utils/currency';
 
 type Prefs = { pushNotifications: boolean };
 
@@ -18,7 +19,6 @@ const usePrefsStore = create<Prefs & { setPushNotifications: (v: boolean) => voi
 export function useSettingsViewModel() {
   const user = useAuthStore((s) => s.user);
   const balanceCents = useAuthStore((s) => s.balanceCents);
-  const signOut = useAuthStore((s) => s.signOut);
   const pushNotifications = usePrefsStore((s) => s.pushNotifications);
   const setPushNotifications = usePrefsStore((s) => s.setPushNotifications);
 
@@ -27,10 +27,5 @@ export function useSettingsViewModel() {
     balanceFormatted: formatCents(balanceCents),
     pushNotifications,
     setPushNotifications,
-    signOut,
   };
-}
-
-function formatCents(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`;
 }

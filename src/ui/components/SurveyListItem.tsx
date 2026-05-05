@@ -2,6 +2,7 @@ import { Pressable, View, Text, StyleSheet } from 'react-native';
 import { MarqueeText } from './MarqueeText';
 import type { Survey } from '@/core/models';
 import { NetworkImage } from './NetworkImage';
+import { formatCents } from '@/core/utils/currency';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 
 type Props = {
@@ -40,7 +41,7 @@ export function SurveyListItem({ survey, onPress }: Props) {
           </View>
         </View>
         <View style={[styles.payoutWrap, { backgroundColor: colors.payout }]}>
-          <Text style={styles.payout}>${(survey.payoutCents / 100).toFixed(2)}</Text>
+          <Text style={styles.payout}>{formatCents(survey.payoutCents)}</Text>
         </View>
       </View>
     </Pressable>

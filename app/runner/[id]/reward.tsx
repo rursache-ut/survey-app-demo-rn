@@ -1,35 +1,32 @@
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as Haptics from 'expo-haptics';
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { useSurveyRunnerViewModel } from '@/features/survey-runner/viewmodels/useSurveyRunnerViewModel';
+import { useSurveyRunnerViewModel, type RewardSnapshot } from '@/features/survey-runner/viewmodels/useSurveyRunnerViewModel';
 import { useSurveyRunnerCoordinator } from '@/features/survey-runner/navigation/useSurveyRunnerCoordinator';
-import { useAuthStore } from '@/features/auth/store/authStore';
-import { useSurveyListStore } from '@/features/surveys/store/surveyListStore';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
+import { formatCents } from '@/core/utils/currency';
 import { spacing, typography, useTheme } from '@/ui/theme';
 
 const { width } = Dimensions.get('window');
 
 export default function RewardScreen() {
   const { colors } = useTheme();
-  const vm = useSurveyRunnerViewModel();
+  const { survey, claimReward } = useSurveyRunnerViewModel();
   const coordinator = useSurveyRunnerCoordinator();
-  const award = useAuthStore((s) => s.awardCents);
-  const markCompleted = useSurveyListStore((s) => s.markCompleted);
-  const [grantedCents] = useState<number>(vm.survey?.payoutCents ?? 0);
-  const [grantedTitle] = useState<string>(vm.survey?.title ?? '');
+  const claimedRef = useRef(false);
+  const [snapshot, setSnapshot] = useState<RewardSnapshot | null>(() =>
+    survey ? { title: survey.title, payoutCents: survey.payoutCents } : null
+  );
 
   useEffect(() => {
-    if (!vm.survey) return;
-    const surveyId = vm.survey.id;
-    const payout = vm.survey.payoutCents;
-    award(payout);
-    markCompleted(surveyId);
-    vm.finish();
+    if (claimedRef.current) return;
+    claimedRef.current = true;
+    const claimed = claimReward();
+    if (claimed) setSnapshot(claimed);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-  }, []);
+  }, [claimReward]);
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -38,9 +35,11 @@ export default function RewardScreen() {
           <Text style={styles.check}>✓</Text>
         </View>
         <Text style={[styles.title, { color: colors.textSecondary }]}>You earned</Text>
-        <Text style={[styles.amount, { color: colors.text }]}>${(grantedCents / 100).toFixed(2)}</Text>
+        <Text style={[styles.amount, { color: colors.text }]}>
+          {formatCents(snapshot?.payoutCents ?? 0)}
+        </Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]} numberOfLines={2}>
-          for completing {grantedTitle}
+          for completing {snapshot?.title ?? ''}
         </Text>
       </View>
 

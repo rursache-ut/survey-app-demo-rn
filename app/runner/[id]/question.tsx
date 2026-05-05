@@ -14,7 +14,6 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useSurveyRunnerViewModel } from '@/features/survey-runner/viewmodels/useSurveyRunnerViewModel';
 import { useSurveyRunnerCoordinator } from '@/features/survey-runner/navigation/useSurveyRunnerCoordinator';
-import { useSurveyListStore } from '@/features/surveys/store/surveyListStore';
 import { QuestionRenderer, isAnswerValid } from '@/ui/components/QuestionRenderer';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
 import type { AnswerValue } from '@/core/models';
@@ -24,7 +23,6 @@ export default function QuestionScreen() {
   const { colors } = useTheme();
   const vm = useSurveyRunnerViewModel();
   const coordinator = useSurveyRunnerCoordinator();
-  const markCompleted = useSurveyListStore((s) => s.markCompleted);
   const [draft, setDraft] = useState<AnswerValue | undefined>(undefined);
 
   useFocusEffect(
@@ -57,9 +55,7 @@ export default function QuestionScreen() {
           text: 'Quit and lose progress',
           style: 'destructive',
           onPress: () => {
-            const surveyId = vm.survey!.id;
-            vm.abandon();
-            markCompleted(surveyId);
+            vm.quit();
             coordinator.exitToList();
           },
         },

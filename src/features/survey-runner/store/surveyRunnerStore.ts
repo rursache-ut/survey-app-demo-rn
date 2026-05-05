@@ -10,10 +10,11 @@ type RunnerState = {
   answers: Record<string, AnswerValue>;
   startedAt: number | null;
   isLoading: boolean;
+  error: string | null;
 };
 
 type RunnerActions = {
-  start: (surveyId: string) => Promise<void>;
+  start: (surveyId: string) => Promise<boolean>;
   submitAnswer: (questionId: string, value: AnswerValue) => void;
   abandon: () => void;
   finish: () => Answer[];
@@ -27,17 +28,24 @@ export const useSurveyRunnerStore = create<RunnerState & RunnerActions>()(
       answers: {},
       startedAt: null,
       isLoading: false,
+      error: null,
 
       start: async (surveyId) => {
-        set({ isLoading: true });
-        const survey = await surveyRepository.getSurvey(surveyId);
-        set({
-          survey,
-          questionIndex: 0,
-          answers: {},
-          startedAt: Date.now(),
-          isLoading: false,
-        });
+        set({ isLoading: true, error: null });
+        try {
+          const survey = await surveyRepository.getSurvey(surveyId);
+          set({
+            survey,
+            questionIndex: 0,
+            answers: {},
+            startedAt: Date.now(),
+            isLoading: false,
+          });
+          return true;
+        } catch {
+          set({ isLoading: false, error: 'Could not load survey' });
+          return false;
+        }
       },
 
       submitAnswer: (questionId, value) => {

@@ -5,6 +5,7 @@ import { useLayoutEffect } from 'react';
 import { useSurveyListViewModel } from '@/features/surveys/viewmodels/useSurveyListViewModel';
 import { useSurveyListCoordinator } from '@/features/surveys/navigation/useSurveyListCoordinator';
 import { SurveyListItem } from '@/ui/components/SurveyListItem';
+import { formatCents } from '@/core/utils/currency';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 import { useAuthStore } from '@/features/auth/store/authStore';
 
@@ -33,7 +34,7 @@ export default function SurveysScreen() {
           element: (
             <View style={[styles.balancePill, { backgroundColor: colors.payout }]}>
               <Text style={[styles.balanceText, { color: '#fff' }]}>
-                ${(balanceCents / 100).toFixed(2)}
+                {formatCents(balanceCents)}
               </Text>
             </View>
           ),

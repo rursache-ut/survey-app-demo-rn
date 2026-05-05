@@ -33,6 +33,7 @@ yarn-error.*
 # editors
 .vscode/
 .idea/
+.claude/
 
 # local env files
 .env*.local

@@ -10,16 +10,16 @@ import {
   Platform,
 } from 'react-native';
 import Constants from 'expo-constants';
-import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { NetworkImage } from '@/ui/components/NetworkImage';
 import { useSettingsViewModel } from '@/features/settings/viewmodels/useSettingsViewModel';
+import { useSettingsCoordinator } from '@/features/settings/navigation/useSettingsCoordinator';
 import { radii, spacing, typography, useTheme, type ThemeColors } from '@/ui/theme';
 
 export default function SettingsScreen() {
   const { colors } = useTheme();
   const vm = useSettingsViewModel();
-  const router = useRouter();
+  const coordinator = useSettingsCoordinator();
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 
   return (
@@ -97,10 +97,7 @@ export default function SettingsScreen() {
 
       <Section colors={colors}>
         <Pressable
-          onPress={() => {
-            vm.signOut();
-            router.replace('/(auth)/login');
-          }}
+          onPress={coordinator.signOutAndExit}
           style={({ pressed }) => [
             styles.row,
             { borderBottomColor: 'transparent' },
