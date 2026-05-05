@@ -14,16 +14,30 @@ type Props = {
   style?: TextStyle | TextStyle[];
   pxPerSecond?: number;
   pauseMs?: number;
+  /** Minimum allowed scale before falling back to marquee. */
+  minScale?: number;
 };
 
-export function MarqueeText({ text, style, pxPerSecond = 28, pauseMs = 1500 }: Props) {
+export function MarqueeText({
+  text,
+  style,
+  pxPerSecond = 28,
+  pauseMs = 1500,
+  minScale = 0.95,
+}: Props) {
   const [containerWidth, setContainerWidth] = useState(0);
   const [textWidth, setTextWidth] = useState(0);
   const offset = useRef(new Animated.Value(0)).current;
-  const overflow = textWidth > containerWidth && containerWidth > 0;
+
+  const fitsAtFull = textWidth > 0 && textWidth <= containerWidth;
+  const requiredScale = textWidth > 0 ? containerWidth / textWidth : 1;
+  const fitsAtMinScale = requiredScale >= minScale;
+  const useShrink = !fitsAtFull && textWidth > 0 && containerWidth > 0 && fitsAtMinScale;
+  const useMarquee =
+    !fitsAtFull && textWidth > 0 && containerWidth > 0 && !fitsAtMinScale;
 
   useEffect(() => {
-    if (!overflow) {
+    if (!useMarquee) {
       offset.setValue(0);
       return;
     }
@@ -51,7 +65,7 @@ export function MarqueeText({ text, style, pxPerSecond = 28, pauseMs = 1500 }: P
       loop.stop();
       offset.setValue(0);
     };
-  }, [overflow, textWidth, containerWidth, pxPerSecond, pauseMs, offset]);
+  }, [useMarquee, textWidth, containerWidth, pxPerSecond, pauseMs, offset]);
 
   return (
     <View
@@ -64,7 +78,21 @@ export function MarqueeText({ text, style, pxPerSecond = 28, pauseMs = 1500 }: P
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 0 }}
       >
-        <Animated.View style={{ transform: [{ translateX: offset }] }}>
+        <Animated.View
+          style={
+            useShrink
+              ? {
+                  transform: [
+                    { translateX: 0 },
+                    { scale: requiredScale },
+                  ],
+                  // anchor scale at the left edge
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  ...({ transformOrigin: '0% 50%' } as object),
+                }
+              : { transform: [{ translateX: offset }] }
+          }
+        >
           <Text
             numberOfLines={1}
             style={style}

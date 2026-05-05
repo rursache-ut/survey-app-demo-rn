@@ -51,6 +51,9 @@ to add the marketplace and
 `/plugin install expo`
 to intall the plugin that comes with the skills
 
+For anything else (eg. Codex, etc) run
+`npx skills add expo/skills`
+
 ## Run
 
 ```bash
