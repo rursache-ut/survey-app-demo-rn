@@ -31,6 +31,6 @@ export function useSettingsViewModel() {
   };
 }
 
-export function formatCents(cents: number): string {
+function formatCents(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`;
 }

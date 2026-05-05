@@ -8,7 +8,7 @@ export function useAuthViewModel() {
   const signInError = useAuthStore((s) => s.signInError);
   const signInAction = useAuthStore((s) => s.signIn);
 
-  const canSubmit = email.trim().length > 3 && password.length > 0 && !isSigningIn;
+  const canSubmit = isLikelyEmail(email) && password.length > 0 && !isSigningIn;
 
   return {
     email,
@@ -20,4 +20,9 @@ export function useAuthViewModel() {
     canSubmit,
     submit: () => signInAction(email, password),
   };
+}
+
+function isLikelyEmail(value: string): boolean {
+  const trimmed = value.trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
 }

@@ -1,11 +1,11 @@
 import { FlatList, View, Text, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useSurveyListViewModel } from '@/features/surveys/viewmodels/useSurveyListViewModel';
 import { useSurveyListCoordinator } from '@/features/surveys/navigation/useSurveyListCoordinator';
 import { SurveyListItem } from '@/ui/components/SurveyListItem';
-import { spacing, typography, useTheme } from '@/ui/theme';
+import { radii, spacing, typography, useTheme } from '@/ui/theme';
 import { useAuthStore } from '@/features/auth/store/authStore';
 
 export default function SurveysScreen() {
@@ -42,10 +42,6 @@ export default function SurveysScreen() {
     });
   }, [navigation, coordinator, balanceCents, colors]);
 
-  useEffect(() => {
-    vm.refresh();
-  }, []);
-
   return (
     <FlatList
       style={{ backgroundColor: colors.background }}
@@ -78,6 +74,6 @@ const styles = StyleSheet.create({
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl },
   emptyText: { ...typography.headline },
   emptySub: { ...typography.subhead, marginTop: 4 },
-  balancePill: { borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 },
+  balancePill: { borderRadius: radii.pill, paddingHorizontal: spacing.md, paddingVertical: spacing.xs + 2 },
   balanceText: { fontWeight: '600' as const, fontVariant: ['tabular-nums'] },
 });

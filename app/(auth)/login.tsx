@@ -40,7 +40,7 @@ export default function LoginScreen() {
     tapsRef.current = [...tapsRef.current.filter((t) => now - t < TAP_WINDOW_MS), now];
     if (tapsRef.current.length >= 3) {
       tapsRef.current = [];
-      vm.setEmail('radu_u@me.com');
+      vm.setEmail('test@user.com');
       vm.setPassword('testpass');
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
     }

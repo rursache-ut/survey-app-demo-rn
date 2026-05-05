@@ -46,7 +46,7 @@ export default function SettingsScreen() {
         </View>
         <IconRow
           icon="wallet-outline"
-          iconBg="#34C759"
+          iconBg={colors.payout}
           label="Balance"
           value={vm.balanceFormatted}
           colors={colors}
@@ -57,7 +57,7 @@ export default function SettingsScreen() {
       <Section header="Preferences" colors={colors}>
         <ToggleRow
           icon="notifications-outline"
-          iconBg="#FF453A"
+          iconBg={colors.danger}
           label="Push notifications"
           value={vm.pushNotifications}
           onChange={vm.setPushNotifications}
@@ -87,11 +87,11 @@ export default function SettingsScreen() {
       <Section header="Support" colors={colors}>
         <IconRow
           icon="mail-outline"
-          iconBg="#0A84FF"
+          iconBg={colors.accent}
           label="Contact us"
           colors={colors}
           last
-          onPress={() => Linking.openURL('mailto:contact@randusoft.ro')}
+          onPress={() => Linking.openURL('mailto:contact@company.com')}
         />
       </Section>
 

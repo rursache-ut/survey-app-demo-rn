@@ -86,8 +86,8 @@ export function MarqueeText({
                     { translateX: 0 },
                     { scale: requiredScale },
                   ],
-                  // anchor scale at the left edge
-                  // eslint-disable-next-line react-native/no-inline-styles
+                  // transformOrigin is missing from RN's StyleProp typings but
+                  // is honored at runtime; cast keeps the left-edge anchor
                   ...({ transformOrigin: '0% 50%' } as object),
                 }
               : { transform: [{ translateX: offset }] }

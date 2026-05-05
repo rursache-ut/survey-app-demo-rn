@@ -17,33 +17,33 @@ export default function RootLayout() {
         <PaperProvider theme={paperTheme}>
           <ThemeProvider value={navTheme}>
             <StatusBar style="auto" />
-          <Stack
-            screenOptions={{
-              headerTransparent: false,
-              headerBackButtonDisplayMode: 'minimal',
-              headerTitleStyle: { fontWeight: '600' },
-            }}
-          >
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(main)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="settings"
-              options={{
-                presentation: 'formSheet',
-                title: 'Settings',
-                headerLargeTitle: false,
-                headerTransparent: true,
+            <Stack
+              screenOptions={{
+                headerTransparent: false,
                 headerBackButtonDisplayMode: 'minimal',
-                sheetGrabberVisible: true,
-                sheetAllowedDetents: [1.0],
+                headerTitleStyle: { fontWeight: '600' },
               }}
-            />
-            <Stack.Screen
-              name="runner"
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
-          </Stack>
+            >
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(main)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="settings"
+                options={{
+                  presentation: 'formSheet',
+                  title: 'Settings',
+                  headerLargeTitle: false,
+                  headerTransparent: true,
+                  headerBackButtonDisplayMode: 'minimal',
+                  sheetGrabberVisible: true,
+                  sheetAllowedDetents: [1.0],
+                }}
+              />
+              <Stack.Screen
+                name="runner"
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+            </Stack>
           </ThemeProvider>
         </PaperProvider>
       </SafeAreaProvider>

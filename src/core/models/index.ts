@@ -55,8 +55,6 @@ export type Question =
   | SliderQuestion
   | TopXQuestion;
 
-export type QuestionType = Question['type'];
-
 export type Survey = {
   id: string;
   title: string;

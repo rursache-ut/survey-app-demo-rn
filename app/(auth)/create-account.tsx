@@ -1,14 +1,10 @@
 import { View, Text, StyleSheet, Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 
 export default function CreateAccountScreen() {
   const { colors } = useTheme();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['bottom']}>
@@ -22,8 +18,6 @@ export default function CreateAccountScreen() {
           style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
           placeholder="Full name"
           placeholderTextColor={colors.textTertiary}
-          value={name}
-          onChangeText={setName}
         />
         <TextInput
           style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
@@ -31,16 +25,12 @@ export default function CreateAccountScreen() {
           placeholderTextColor={colors.textTertiary}
           autoCapitalize="none"
           keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
         />
         <TextInput
           style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
           placeholder="Password"
           placeholderTextColor={colors.textTertiary}
           secureTextEntry
-          value={password}
-          onChangeText={setPassword}
         />
         <GlassPrimaryButton
           title="Create account"

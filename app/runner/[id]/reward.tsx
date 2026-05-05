@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Haptics from 'expo-haptics';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { useSurveyRunnerViewModel } from '@/features/survey-runner/viewmodels/useSurveyRunnerViewModel';
@@ -18,7 +18,6 @@ export default function RewardScreen() {
   const coordinator = useSurveyRunnerCoordinator();
   const award = useAuthStore((s) => s.awardCents);
   const markCompleted = useSurveyListStore((s) => s.markCompleted);
-  const cannonRef = useRef<ConfettiCannon>(null);
   const [grantedCents] = useState<number>(vm.survey?.payoutCents ?? 0);
   const [grantedTitle] = useState<string>(vm.survey?.title ?? '');
 
@@ -50,7 +49,6 @@ export default function RewardScreen() {
       </View>
 
       <ConfettiCannon
-        ref={cannonRef}
         count={140}
         origin={{ x: width / 2, y: 0 }}
         autoStart

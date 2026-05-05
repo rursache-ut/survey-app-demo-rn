@@ -1,12 +1,10 @@
 import { View, Text, StyleSheet, Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 
 export default function ForgotPasswordScreen() {
   const { colors } = useTheme();
-  const [email, setEmail] = useState('');
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]} edges={['bottom']}>
       <View style={styles.container}>
@@ -20,8 +18,6 @@ export default function ForgotPasswordScreen() {
           placeholderTextColor={colors.textTertiary}
           autoCapitalize="none"
           keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
         />
         <GlassPrimaryButton
           title="Send reset link"

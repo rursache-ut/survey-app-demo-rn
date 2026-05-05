@@ -87,5 +87,3 @@ export function useTheme(): { colors: ThemeColors; scheme: 'light' | 'dark' } {
     [scheme]
   );
 }
-
-export const colors = lightColors;

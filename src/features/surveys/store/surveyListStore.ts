@@ -14,7 +14,6 @@ type SurveyListState = {
 type SurveyListActions = {
   load: () => Promise<void>;
   markCompleted: (id: string) => void;
-  reset: () => void;
 };
 
 export const useSurveyListStore = create<SurveyListState & SurveyListActions>()(
@@ -30,7 +29,7 @@ export const useSurveyListStore = create<SurveyListState & SurveyListActions>()(
         try {
           const surveys = await surveyRepository.listSurveys();
           set({ surveys, isLoading: false });
-        } catch (e) {
+        } catch {
           set({ isLoading: false, error: 'Failed to load surveys' });
         }
       },
@@ -39,8 +38,6 @@ export const useSurveyListStore = create<SurveyListState & SurveyListActions>()(
         if (get().completedIds.includes(id)) return;
         set({ completedIds: [...get().completedIds, id] });
       },
-
-      reset: () => set({ surveys: [], completedIds: [], error: null }),
     }),
     {
       name: 'sayso/survey-list',

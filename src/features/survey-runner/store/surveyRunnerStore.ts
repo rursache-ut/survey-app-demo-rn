@@ -14,7 +14,6 @@ type RunnerState = {
 
 type RunnerActions = {
   start: (surveyId: string) => Promise<void>;
-  resume: () => Survey | null;
   submitAnswer: (questionId: string, value: AnswerValue) => void;
   abandon: () => void;
   finish: () => Answer[];
@@ -40,8 +39,6 @@ export const useSurveyRunnerStore = create<RunnerState & RunnerActions>()(
           isLoading: false,
         });
       },
-
-      resume: () => get().survey,
 
       submitAnswer: (questionId, value) => {
         const { survey, questionIndex, answers } = get();
