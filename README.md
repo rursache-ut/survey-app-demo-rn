@@ -44,6 +44,13 @@ Views never touch the router or store directly. May not be the best choice but i
 - Tapping into existing native code is possible but not always easy; dependencies are tricky to integrate and feels fragile
 - Navigation animations feel off on both platforms
 
+## AI Setup
+In claude code run
+`/plugin marketplace add expo/skills`
+to add the marketplace and
+`/plugin install expo`
+to intall the plugin that comes with the skills
+
 ## Run
 
 ```bash

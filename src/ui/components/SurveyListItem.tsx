@@ -78,8 +78,13 @@ const styles = StyleSheet.create({
   meta: { ...typography.caption1 },
   payoutWrap: {
     borderRadius: radii.pill,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: 3,
   },
-  payout: { color: '#fff', ...typography.headline, fontVariant: ['tabular-nums'] },
+  payout: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+    fontVariant: ['tabular-nums'],
+  },
 });

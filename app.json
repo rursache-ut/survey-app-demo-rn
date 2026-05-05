@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "ro.randusoft.demo"
+      "bundleIdentifier": "ro.randusoft.demo",
+      "infoPlist": {
+        "UIBackgroundModes": ["fetch", "remote-notification"]
+      }
     },
     "android": {
       "package": "ro.randusoft.demo",
