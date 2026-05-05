@@ -14,7 +14,7 @@ React Native demo for the upcoming survey-taking app
 
 ## Architecture
 
-Lightweight, feature-first. Three things to remember:
+Lightweight and feature-first:
 
 - **Screens** (`app/`) read stores directly with selectors and call `router.push()` inline. No viewmodel or coordinator wrapper layers
 - **Stores** (`src/features/<name>/store/`) — one Zustand slice per domain. Async actions catch their own errors and expose an `error: string \| null` field

@@ -1,0 +1,21 @@
+scaffold a react native project with expo, use the latest version of sdk and tooling. the app name is Sayso and bundle id must be "ro.randusoft.demo". the app will be a survey/quiz taker that rewards users with money on complition. we will start with mocked data that should be read from json files on disk (generate those too). we have the following components:
+- auth screen (hero icon view, email/pass, forgot pass, create account links)
+- main screen that will contain the list with the surveys, a largeinline title, settings icon left that opens the settings view in a modal
+	- each list item is a survey and must contain the payout value for the user, the title and short description, time when the survey expires and anything else you see fit
+- settings view with a sectioned ios-like settings app, first section user profile, then some toggle settings, then pp/tos and lastly contact us + footer with app name and version
+
+we need to support multiple survey/quiz content types: unique selection from multiple items, multiple selection from multiple items, free text response, slider selection (min/max value), top X items ordering
+
+a survey/quiz will contain multiple content types eg: a free text response, then a slider selection and then a unique selection. once a survey is started, it must be finished and the users cannot go back to their previous content type once passed through (similar to the UserTesting app)
+
+we must only use typescript and im open to a MVVM-like or redux architecture, whatever is the go-to for react native. its important to be scalable but not bloated or swift TCA-like
+
+to showcase 3rd party library support i want you to use Kingfisher on ios and whatever equivalent there is for android. use SPM on ios and whatever is tha latest modern thing on android
+
+regarding design, we aim to use the native ios/android UI, the modern and latest liquid glass and material design. min ios 26 and android equivalent. dont use cocoapods for the ios native part but use SPM
+
+spawn multiple agents to research online all the required parts, from the latest SDK versions to how to use the latest design systems for both native platforms
+
+ask me if you have any questions while the agents are researching
+
+ultrathink
