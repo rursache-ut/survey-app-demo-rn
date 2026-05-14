@@ -13,6 +13,6 @@ export const usePrefsStore = create<PrefsState>()(
       pushNotifications: true,
       setPushNotifications: (v) => set({ pushNotifications: v }),
     }),
-    { name: 'sayso/prefs', storage: createJSONStorage() }
+    { name: 'sayso/prefs', version: 1, storage: createJSONStorage() }
   )
 );

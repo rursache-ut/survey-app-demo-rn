@@ -75,6 +75,7 @@ export const useSurveyRunnerStore = create<RunnerState & RunnerActions>()(
     }),
     {
       name: 'sayso/runner',
+      version: 1,
       storage: createJSONStorage(),
       partialize: (s) => ({
         survey: s.survey,
