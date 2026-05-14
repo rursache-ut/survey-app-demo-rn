@@ -5,13 +5,32 @@ export function createJSONStorage<T>(): PersistStorage<T> {
   return {
     getItem: async (name) => {
       const raw = await AsyncStorage.getItem(name);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      try {
+        return JSON.parse(raw);
+      } catch (err) {
+        console.warn(`[zustandStorage] Corrupt entry for "${name}", clearing.`, err);
+        try {
+          await AsyncStorage.removeItem(name);
+        } catch (removeErr) {
+          console.warn(`[zustandStorage] Failed to clear corrupt entry "${name}".`, removeErr);
+        }
+        return null;
+      }
     },
     setItem: async (name, value) => {
-      await AsyncStorage.setItem(name, JSON.stringify(value));
+      try {
+        await AsyncStorage.setItem(name, JSON.stringify(value));
+      } catch (err) {
+        console.warn(`[zustandStorage] Failed to persist "${name}".`, err);
+      }
     },
     removeItem: async (name) => {
-      await AsyncStorage.removeItem(name);
+      try {
+        await AsyncStorage.removeItem(name);
+      } catch (err) {
+        console.warn(`[zustandStorage] Failed to remove "${name}".`, err);
+      }
     },
   };
 }
