@@ -26,6 +26,7 @@ export default function LoginScreen() {
   const isSigningIn = useAuthStore((s) => s.isSigningIn);
   const signInError = useAuthStore((s) => s.signInError);
   const signIn = useAuthStore((s) => s.signIn);
+  const clearSignInError = useAuthStore((s) => s.clearSignInError);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -78,7 +79,10 @@ export default function LoginScreen() {
             autoCorrect={false}
             keyboardType="email-address"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => {
+              setEmail(text);
+              if (signInError) clearSignInError();
+            }}
           />
           <TextInput
             style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
@@ -86,7 +90,10 @@ export default function LoginScreen() {
             placeholderTextColor={colors.textTertiary}
             secureTextEntry
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(text) => {
+              setPassword(text);
+              if (signInError) clearSignInError();
+            }}
           />
           {signInError ? (
             <Text style={[styles.error, { color: colors.danger }]}>{signInError}</Text>

@@ -17,6 +17,7 @@ type AuthActions = {
   signOut: () => void;
   awardCents: (cents: number) => void;
   setHydrated: () => void;
+  clearSignInError: () => void;
 };
 
 export const useAuthStore = create<AuthState & AuthActions>()(
@@ -66,6 +67,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       setHydrated: () => set({ hydrated: true }),
+
+      clearSignInError: () => set({ signInError: null }),
     }),
     {
       name: 'sayso/auth',
