@@ -17,7 +17,7 @@ export function SurveyListItem({ survey, onPress }: Props) {
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
-        { backgroundColor: colors.card },
+        { backgroundColor: colors.card, borderColor: colors.separator },
         pressed && styles.cardPressed,
       ]}
     >
@@ -63,10 +63,12 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     marginHorizontal: spacing.lg,
     marginVertical: spacing.xs + 2,
+    borderWidth: StyleSheet.hairlineWidth,
     shadowColor: '#000',
     shadowOpacity: 0.04,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
   },
   cardPressed: { opacity: 0.7 },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
