@@ -41,6 +41,7 @@ export const useSurveyListStore = create<SurveyListState & SurveyListActions>()(
     }),
     {
       name: 'sayso/survey-list',
+      version: 1,
       storage: createJSONStorage(),
       partialize: (s) => ({ completedIds: s.completedIds }),
     }

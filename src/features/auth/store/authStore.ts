@@ -69,6 +69,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     }),
     {
       name: 'sayso/auth',
+      version: 1,
       storage: createJSONStorage(),
       partialize: (s) => ({ user: s.user, balanceCents: s.balanceCents }),
       onRehydrateStorage: () => (state) => {
