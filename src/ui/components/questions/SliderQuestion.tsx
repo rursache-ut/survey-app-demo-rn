@@ -39,6 +39,14 @@ export function SliderQuestion({ question, value, onChange }: Props) {
         onValueChange={(v) => onChange({ type: 'slider', value: Math.round(v / question.step) * question.step })}
         minimumTrackTintColor={colors.accent}
         maximumTrackTintColor={colors.separator}
+        accessibilityRole="adjustable"
+        accessibilityLabel={question.prompt}
+        accessibilityValue={{
+          min: question.min,
+          max: question.max,
+          now: current,
+          text: formatValue(current, question.unit),
+        }}
       />
       <View style={styles.bounds}>
         <Text style={[styles.bound, { color: colors.textSecondary }]}>{formatValue(question.min, question.unit)}</Text>
