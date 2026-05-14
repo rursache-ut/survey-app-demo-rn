@@ -30,19 +30,31 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       signIn: async (email, password) => {
         set({ isSigningIn: true, signInError: null });
-        const result = await authRepository.signIn(email, password);
-        if (!result.ok) {
+        try {
+          const result = await authRepository.signIn(email, password);
+          if (!result.ok) {
+            set({
+              signInError:
+                result.reason === 'invalid-credentials'
+                  ? 'Invalid email or password'
+                  : 'Something went wrong',
+            });
+            return false;
+          }
+          set({ user: result.user, signInError: null });
+          return true;
+        } catch (err) {
+          const reason = (err as { reason?: string } | null)?.reason;
           set({
-            isSigningIn: false,
             signInError:
-              result.reason === 'invalid-credentials'
+              reason === 'invalid-credentials'
                 ? 'Invalid email or password'
                 : 'Something went wrong',
           });
           return false;
+        } finally {
+          set({ isSigningIn: false });
         }
-        set({ user: result.user, isSigningIn: false, signInError: null });
-        return true;
       },
 
       signOut: () => {
