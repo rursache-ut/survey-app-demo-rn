@@ -67,7 +67,7 @@ export function TopXQuestion({ question, value, onChange }: Props) {
           </View>
           <Text style={[styles.label, { color: colors.text }]}>{item.label}</Text>
           <View style={styles.controls}>
-            <Pressable onPress={() => move(index, -1)} hitSlop={8} disabled={index === 0}>
+            <Pressable onPress={() => move(index, -1)} hitSlop={12} disabled={index === 0}>
               <Ionicons
                 name="chevron-up"
                 size={22}
@@ -76,7 +76,7 @@ export function TopXQuestion({ question, value, onChange }: Props) {
             </Pressable>
             <Pressable
               onPress={() => move(index, 1)}
-              hitSlop={8}
+              hitSlop={12}
               disabled={index === currentOrder.length - 1}
             >
               <Ionicons
@@ -87,7 +87,7 @@ export function TopXQuestion({ question, value, onChange }: Props) {
                 }
               />
             </Pressable>
-            <Pressable onPressIn={drag} hitSlop={8} style={{ paddingLeft: spacing.sm }}>
+            <Pressable onPressIn={drag} hitSlop={12} style={{ paddingLeft: spacing.sm }}>
               <Ionicons name="reorder-three" size={26} color={colors.textSecondary} />
             </Pressable>
           </View>
