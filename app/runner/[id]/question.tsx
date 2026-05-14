@@ -87,7 +87,7 @@ export default function QuestionScreen() {
             <Text style={[styles.step, { color: colors.textSecondary }]}>
               Question {questionIndex + 1} of {totalQuestions}
             </Text>
-            <Pressable onPress={onQuit} hitSlop={8}>
+            <Pressable onPress={onQuit} hitSlop={16}>
               <Text style={[styles.quit, { color: colors.danger }]}>Quit</Text>
             </Pressable>
           </View>
