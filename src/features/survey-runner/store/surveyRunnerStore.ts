@@ -15,6 +15,7 @@ type RunnerState = {
 
 type RunnerActions = {
   start: (surveyId: string) => Promise<boolean>;
+  setDraft: (questionId: string, value: AnswerValue) => void;
   submitAnswer: (questionId: string, value: AnswerValue) => void;
   abandon: () => void;
   finish: () => Answer[];
@@ -46,6 +47,11 @@ export const useSurveyRunnerStore = create<RunnerState & RunnerActions>()(
           set({ isLoading: false, error: 'Could not load survey' });
           return false;
         }
+      },
+
+      setDraft: (questionId, value) => {
+        const { answers } = get();
+        set({ answers: { ...answers, [questionId]: value } });
       },
 
       submitAnswer: (questionId, value) => {
