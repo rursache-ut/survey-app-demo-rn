@@ -38,7 +38,7 @@ export default function QuestionScreen() {
   const totalQuestions = survey.questions.length;
   const currentQuestion = survey.questions[questionIndex] ?? null;
   if (!currentQuestion) return null;
-  const progress = totalQuestions > 0 ? Math.min(questionIndex / totalQuestions, 1) : 0;
+  const progress = totalQuestions > 0 ? Math.min((questionIndex + 1) / totalQuestions, 1) : 0;
   const isLast = questionIndex === totalQuestions - 1;
 
   const onNext = () => {
