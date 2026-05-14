@@ -6,8 +6,18 @@ import { LogBox, Platform, useColorScheme } from 'react-native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { ThemeProvider, DarkTheme, DefaultTheme } from '@react-navigation/native';
 
-// Hide the in-app warning toast in dev. Logs still print to Metro.
-if (__DEV__) LogBox.ignoreAllLogs();
+// Silence only known-noisy third-party warnings in dev; everything else
+// still surfaces in the in-app overlay and Metro.
+if (__DEV__) {
+  LogBox.ignoreLogs([
+    // Reanimated chatter under fast refresh
+    /^Sending `onAnimatedValueUpdate` with no listeners registered/,
+    // Common third-party module warning on RN >= 0.65
+    /^new NativeEventEmitter\(\)/,
+    // Require cycles from transitive deps in node_modules
+    /^Require cycle:/,
+  ]);
+}
 
 export default function RootLayout() {
   const scheme = useColorScheme();
