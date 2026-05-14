@@ -11,12 +11,11 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useSurveyRunnerStore } from '@/features/survey-runner/store/surveyRunnerStore';
 import { quitSurvey } from '@/features/survey-runner/actions/runnerActions';
 import { QuestionRenderer, isAnswerValid } from '@/ui/components/QuestionRenderer';
 import { GlassPrimaryButton } from '@/ui/components/GlassPrimaryButton';
-import type { AnswerValue } from '@/core/models';
 import { spacing, typography, useTheme } from '@/ui/theme';
 
 export default function QuestionScreen() {
@@ -25,7 +24,12 @@ export default function QuestionScreen() {
   const survey = useSurveyRunnerStore((s) => s.survey);
   const questionIndex = useSurveyRunnerStore((s) => s.questionIndex);
   const submitAnswer = useSurveyRunnerStore((s) => s.submitAnswer);
-  const [draft, setDraft] = useState<AnswerValue | undefined>(undefined);
+  const setDraft = useSurveyRunnerStore((s) => s.setDraft);
+  const currentQuestionId =
+    useSurveyRunnerStore((s) => s.survey?.questions[s.questionIndex]?.id) ?? null;
+  const draft = useSurveyRunnerStore((s) =>
+    currentQuestionId ? s.answers[currentQuestionId] : undefined
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -44,7 +48,6 @@ export default function QuestionScreen() {
   const onNext = () => {
     if (!draft) return;
     submitAnswer(currentQuestion.id, draft);
-    setDraft(undefined);
     if (questionIndex + 1 >= totalQuestions) {
       router.replace(`/runner/${survey.id}/reward`);
     }
@@ -98,7 +101,7 @@ export default function QuestionScreen() {
           <QuestionRenderer
             question={currentQuestion}
             value={draft}
-            onChange={setDraft}
+            onChange={(next) => setDraft(currentQuestion.id, next)}
           />
         </ScrollView>
 
