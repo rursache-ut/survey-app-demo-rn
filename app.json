@@ -12,6 +12,11 @@
       "supportsTablet": false,
       "bundleIdentifier": "ro.randusoft.demo",
       "infoPlist": {
+        "NSCameraUsageDescription": "Sayso uses the camera to attach photos to survey responses.",
+        "NSLocationWhenInUseUsageDescription": "Sayso uses your location for surveys that ask where you are.",
+        "NSMicrophoneUsageDescription": "Sayso uses the microphone for voice-note answers in surveys.",
+        "NSPhotoLibraryUsageDescription": "Sayso uses your photo library to attach images to survey responses.",
+        "NSUserTrackingUsageDescription": "Sayso uses tracking to deliver more relevant surveys.",
         "UIBackgroundModes": ["fetch", "remote-notification"]
       }
     },
@@ -23,6 +28,7 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"],
       "predictiveBackGestureEnabled": false
     },
     "plugins": [
