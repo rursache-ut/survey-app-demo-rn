@@ -62,3 +62,15 @@ npm run android
 ```
 
 Demo credentials: `test@user.com` / `testpass` or triple-tap the hero icon in the auth screen
+
+## Troubleshooting
+
+**App sits on the splash screen forever (no error overlay).** Usually an Xcode incremental-build cache that has drifted from `node_modules`. Scroll the `npm run ios` stdout for a `[runtime not ready]: Cannot find native module '…'` line — that's the tell. Fix:
+
+```bash
+rm -rf ios/Pods
+rm -rf ~/Library/Developer/Xcode/DerivedData/Sayso-*
+npx expo install --fix     # realign minor versions to the SDK
+npx expo prebuild --clean
+npm run ios
+```

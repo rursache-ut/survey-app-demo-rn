@@ -17,7 +17,10 @@
         "NSMicrophoneUsageDescription": "Sayso uses the microphone for voice-note answers in surveys.",
         "NSPhotoLibraryUsageDescription": "Sayso uses your photo library to attach images to survey responses.",
         "NSUserTrackingUsageDescription": "Sayso uses tracking to deliver more relevant surveys.",
-        "UIBackgroundModes": ["fetch", "remote-notification"]
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ]
       }
     },
     "android": {
@@ -28,7 +31,9 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"],
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "plugins": [
@@ -61,7 +66,8 @@
       ],
       "expo-font",
       "expo-web-browser",
-      "./plugins/withKotlinSkipMetadataCheck.js"
+      "./plugins/withKotlinSkipMetadataCheck.js",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,
