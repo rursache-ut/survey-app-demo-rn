@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import type { SingleSelectQuestion as Q, AnswerValue } from '@/core/models';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 
@@ -21,7 +22,10 @@ export function SingleSelectQuestion({ question, value, onChange }: Props) {
           return (
             <Pressable
               key={opt.id}
-              onPress={() => onChange({ type: 'single-select', optionId: opt.id })}
+              onPress={() => {
+                Haptics.selectionAsync().catch(() => {});
+                onChange({ type: 'single-select', optionId: opt.id });
+              }}
               style={[
                 styles.option,
                 {

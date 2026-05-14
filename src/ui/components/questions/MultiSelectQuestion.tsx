@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import type { MultiSelectQuestion as Q, AnswerValue } from '@/core/models';
 import { radii, spacing, typography, useTheme } from '@/ui/theme';
 
@@ -23,6 +24,7 @@ export function MultiSelectQuestion({ question, value, onChange }: Props) {
       if (limit && selected.length >= limit) return;
       next = [...selected, id];
     }
+    Haptics.selectionAsync().catch(() => {});
     onChange({ type: 'multi-select', optionIds: next });
   };
 
