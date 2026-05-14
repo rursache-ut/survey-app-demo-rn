@@ -11,6 +11,8 @@ type Props = {
 export function FreeTextQuestion({ question, value, onChange }: Props) {
   const { colors } = useTheme();
   const text = value?.type === 'free-text' ? value.text : '';
+  const trimmedLength = text.trim().length;
+  const showCounter = question.minLength != null || question.maxLength != null;
   return (
     <View style={styles.container}>
       <Text style={[styles.prompt, { color: colors.text }]}>{question.prompt}</Text>
@@ -24,9 +26,10 @@ export function FreeTextQuestion({ question, value, onChange }: Props) {
         onChangeText={(t) => onChange({ type: 'free-text', text: t })}
         maxLength={question.maxLength}
       />
-      {question.minLength ? (
+      {showCounter ? (
         <Text style={[styles.hint, { color: colors.textSecondary }]}>
-          Min {question.minLength} characters · {text.length}/{question.maxLength ?? '∞'}
+          {question.minLength ? `Min ${question.minLength} characters · ` : ''}
+          {trimmedLength}/{question.maxLength ?? '∞'}
         </Text>
       ) : null}
     </View>
